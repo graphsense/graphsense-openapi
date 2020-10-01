@@ -1,0 +1,11 @@
+type: object
+properties:
+  eur:
+    type: integer
+    format: int64
+  usd:
+    type: integer
+    format: int64
+  value:
+    type: integer
+    format: int64

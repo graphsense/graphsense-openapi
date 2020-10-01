@@ -1,0 +1,6 @@
+in: query
+name: page
+required: false
+schema:
+  type: string
+description: Resumption token for retrieving the next page

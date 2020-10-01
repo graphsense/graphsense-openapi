@@ -1,0 +1,25 @@
+title: a cryptocurrency
+type: object
+properties:
+  no_blocks:
+    format: int64
+    type: integer
+  no_address_relations:
+    format: int64
+    type: integer
+  no_addresses:
+    format: int64
+    type: integer
+  no_entities:
+    format: int64
+    type: integer
+  no_txs:
+    format: int64
+    type: integer
+  no_labels:
+    format: int64
+    type: integer
+  timestamp:
+    format: int64
+    type: integer
+

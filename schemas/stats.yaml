@@ -1,0 +1,14 @@
+type: object
+properties:
+  currencies:
+    type: object
+    properties:
+      btc:
+        $ref: '/spec/schemas/currency.yaml'
+      bch:
+        $ref: '/spec/schemas/currency.yaml'
+      ltc:
+        $ref: '/spec/schemas/currency.yaml'
+      zec:
+        $ref: '/spec/schemas/currency.yaml'
+

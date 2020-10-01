@@ -1,0 +1,19 @@
+get:
+  operationId: list_block_txs_csv
+  parameters:
+    - $ref: '/spec/parameters/currency.yaml' 
+    - $ref: '/spec/parameters/height.yaml'
+  responses:
+    "200":
+      description: OK
+      content:
+        text/csv: 
+          schema:
+            type: array
+            items:
+              $ref: '/spec/schemas/block_tx_summary.yaml'
+  summary: Get all blocks as CSV
+  tags:
+  - blocks
+  x-openapi-router-controller: openapi_server.controllers.blocks_controller
+

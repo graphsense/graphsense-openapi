@@ -1,0 +1,17 @@
+get:
+  operationId: list_blocks
+  parameters:
+    - $ref: '/spec/parameters/currency.yaml' 
+    - $ref: '/spec/parameters/page.yaml'
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '/spec/schemas/blocks.yaml'
+  summary: Get all blocks
+  tags:
+  - blocks
+  x-openapi-router-controller: openapi_server.controllers.blocks_controller
+

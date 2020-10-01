@@ -1,0 +1,14 @@
+type: object
+properties:
+  block_hash:
+    type: string
+    format: string
+  height: 
+    format: int64
+    type: integer
+  no_txs: 
+    format: int64
+    type: integer
+  timestamp: 
+    format: int64
+    type: integer
