@@ -1,9 +1,0 @@
-type: object
-properties:
-  next_page: 
-    $ref: '/spec/schemas/next_page.yaml'
-  blocks:
-    type: array
-    items:
-      $ref: '/spec/schemas/block.yaml'
-

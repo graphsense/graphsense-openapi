@@ -1,9 +1,0 @@
-type: object
-properties:
-  height: 
-    type: integer
-  txs:
-    type: array
-    items:
-      $ref: '/spec/schemas/block_tx_summary.yaml'
-

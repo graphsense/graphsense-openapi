@@ -1,8 +1,0 @@
-in: path
-name: height
-required: true
-schema:
-  type: integer
-  minimum: 1
-description: The block height
-example: 1

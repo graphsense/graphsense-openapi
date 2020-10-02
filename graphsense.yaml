@@ -4,18 +4,224 @@ info:
   title: GraphSense API
   version: 0.4.4
 servers:
-  - url: http://openapi_server:9000
-
+  - url: 'http://openapi_server:9000'
 paths:
   /{currency}/stats:
-    $ref: '/spec/paths/stats.yaml'
+    get:
+      operationId: get_statistics
+      parameters:
+        - $ref: '#/components/parameters/currency'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/currency'
+      summary: Get statistics of currency
+      tags:
+      - general
   /{currency}/blocks:
-    $ref: '/spec/paths/blocks.yaml'
+    get:
+      operationId: list_blocks
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/page'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blocks'
+      summary: Get all blocks
+      tags:
+      - blocks
   /{currency}/blocks/{height}:
-    $ref: '/spec/paths/block.yaml'
+    get:
+      operationId: get_block
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/block'
+      summary: Get a block by its height
+      tags:
+      - blocks
   /{currency}/blocks/{height}/txs:
-    $ref: '/spec/paths/block_txs.yaml'
+    get:
+      operationId: list_block_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/block_txs'
+      summary: Get all blocks (100 per page)
+      tags:
+      - blocks
+
   /{currency}/blocks/{height}/txs.csv:
-    $ref: '/spec/paths/block_txs_csv.yaml'
+    get:
+      operationId: list_block_txs_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/block_tx_summary'
+      summary: Get all blocks as CSV
+      tags:
+      - blocks
+
+components:
+  parameters:
+    currency:
+      in: path
+      name: currency
+      required: true
+      schema:
+        type: string
+        format: string
+      description: The currency
+      example: 'btc'
+    height:
+      in: path
+      name: height
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: The block height
+      example: 1
+    page:
+      in: query
+      name: page
+      required: false
+      schema:
+        type: string
+      description: Resumption token for retrieving the next page
+      example: 0400030bff00f07fffff9b00
+  schemas:
+    stats:
+      type: object
+      properties:
+        currencies:
+          type: object
+          properties:
+            btc:
+              $ref: '#/components/schemas/currency'
+            bch:
+              $ref: '#/components/schemas/currency'
+            ltc:
+              $ref: '#/components/schemas/currency'
+            zec:
+              $ref: '#/components/schemas/currency'
+    currency:
+      title: a cryptocurrency
+      type: object
+      properties:
+        no_blocks:
+          format: int64
+          type: integer
+        no_address_relations:
+          format: int64
+          type: integer
+        no_addresses:
+          format: int64
+          type: integer
+        no_entities:
+          format: int64
+          type: integer
+        no_txs:
+          format: int64
+          type: integer
+        no_labels:
+          format: int64
+          type: integer
+        timestamp:
+          format: int64
+          type: integer
+    block:
+      type: object
+      properties:
+        block_hash:
+          type: string
+          format: string
+        height: 
+          format: int64
+          type: integer
+        no_txs: 
+          format: int64
+          type: integer
+        timestamp: 
+          format: int64
+          type: integer
+    block_txs:
+      type: object
+      properties:
+        height: 
+          type: integer
+        txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/block_tx_summary'
+    block_tx_summary:
+      type: object
+      properties:
+        tx_hash: 
+          type: string
+        no_inputs: 
+          type: integer
+          format: int64
+        no_outputs:
+          type: integer
+          format: int64
+        total_input:
+          $ref: '#/components/schemas/converted_values'
+        total_output:
+          $ref: '#/components/schemas/converted_values'
+    blocks:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/block'
+    converted_values:
+      type: object
+      properties:
+        eur:
+          type: integer
+          format: int64
+        usd:
+          type: integer
+          format: int64
+        value:
+          type: integer
+          format: int64
+    next_page:
+      type: string
+      format: string
+
+
+
 
 

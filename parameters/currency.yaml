@@ -1,7 +1,0 @@
-in: path
-name: currency
-required: true
-schema:
-  type: string
-description: The currency
-example: btc
