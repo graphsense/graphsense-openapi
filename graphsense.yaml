@@ -6,19 +6,17 @@ info:
 servers:
   - url: 'http://openapi_server:9000'
 paths:
-  /{currency}/stats:
+  /stats:
     get:
       operationId: get_statistics
-      parameters:
-        - $ref: '#/components/parameters/currency'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/currency'
-      summary: Get statistics of currency
+                $ref: '#/components/schemas/stats'
+      summary: Get statistics of supported currencies
       tags:
       - general
   /{currency}/blocks:
@@ -122,20 +120,16 @@ components:
       type: object
       properties:
         currencies:
-          type: object
-          properties:
-            btc:
-              $ref: '#/components/schemas/currency'
-            bch:
-              $ref: '#/components/schemas/currency'
-            ltc:
-              $ref: '#/components/schemas/currency'
-            zec:
-              $ref: '#/components/schemas/currency'
-    currency:
-      title: a cryptocurrency
+          type: array
+          items:
+            $ref: '#/components/schemas/currency_stats'
+       # TODO add tools, notes, data_sources?
+    currency_stats:
+      title: statistics of a cryptocurrency
       type: object
       properties:
+        name:
+          type: string
         no_blocks:
           format: int64
           type: integer
