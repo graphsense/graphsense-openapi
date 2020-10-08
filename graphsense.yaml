@@ -160,6 +160,7 @@ components:
         height: 
           format: int64
           type: integer
+          minimum: 1
         no_txs: 
           format: int64
           type: integer
