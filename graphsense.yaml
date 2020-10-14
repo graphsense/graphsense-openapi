@@ -86,7 +86,22 @@ paths:
       summary: Get all blocks as CSV
       tags:
       - blocks
-
+  /{currency}/addresses/{address}:
+    get:
+      operationId: get_address_with_tags
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/address'
+      summary: Get an address with tags
+      tags:
+      - addresses
 components:
   parameters:
     currency:
@@ -96,7 +111,7 @@ components:
       schema:
         type: string
         format: string
-      description: The currency
+      description: The cryptocurrency (e.g., btc)
       example: 'btc'
     height:
       in: path
@@ -115,6 +130,15 @@ components:
         type: string
       description: Resumption token for retrieving the next page
       example: 0400030bff00f07fffff9b00
+    address:
+      in: path
+      name: address
+      required: true
+      schema:
+        type: string
+        format: string
+      description: The cryptocurrency address
+      example: '3Hrnn1UN78uXgLNvtqVXMjHwB41PmX66X4'
   schemas:
     stats:
       type: object
@@ -188,9 +212,9 @@ components:
           type: integer
           format: int64
         total_input:
-          $ref: '#/components/schemas/converted_values'
+          $ref: '#/components/schemas/values'
         total_output:
-          $ref: '#/components/schemas/converted_values'
+          $ref: '#/components/schemas/values'
     blocks:
       type: object
       properties:
@@ -200,7 +224,76 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/block'
-    converted_values:
+    address:
+      type: object
+      required:
+        - address
+        - balance
+        - first_tx
+        - last_tx
+        - in_degree
+        - out_degree
+        - no_incoming_txs
+        - no_outgoing_txs
+        - total_received
+        - total_spent
+      properties:
+        address: 
+          type: string
+          description: Address
+        balance: 
+          $ref: '#/components/schemas/values'
+        first_tx: 
+          $ref: '#/components/schemas/tx_summary'
+        last_tx: 
+          $ref: '#/components/schemas/tx_summary'
+        in_degree: 
+          type: integer
+          format: int64
+        out_degree: 
+          type: integer
+          format: int64
+        no_incoming_txs: 
+          type: integer
+          format: int64
+        no_outgoing_txs: 
+          type: integer
+          format: int64
+        total_received: 
+          $ref: '#/components/schemas/values'
+        total_spent: 
+          $ref: '#/components/schemas/values'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/tag'
+          description: Tags
+    tx_summary:
+        type: object
+        required:
+          - height
+          - timestamp
+          - tx_hash
+        properties:
+          height: 
+            type: integer
+            format: int64
+            description: Transaction height
+          timestamp:
+            type: integer
+            format: int64
+            description: Transaction timestamp
+          tx_hash:
+            type: string
+            description: Transaction hash
+    tag:
+        type: object
+        properties:
+          label:
+              type: string
+
+
+    values:
       type: object
       properties:
         eur:
