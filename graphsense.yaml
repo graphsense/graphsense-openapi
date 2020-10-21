@@ -98,8 +98,81 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address'
+                $ref: '#/components/schemas/address_with_tags'
       summary: Get an address with tags
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/txs:
+    get:
+      operationId: list_address_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/address_txs'
+      summary: Get all transactions an address has been involved in
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/tags:
+    get:
+      operationId: list_address_tags
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tag'
+      summary: Get attribution tags for a given address
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/tags.csv:
+    get:
+      operationId: list_address_tags_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tag'
+      summary: Get attribution tags for a given address
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/neighbors:
+    get:
+      operationId: list_address_neighbors
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neighbors'
+      summary: Get an addresses' neighbors in the address graph
       tags:
       - addresses
 components:
@@ -130,6 +203,24 @@ components:
         type: string
       description: Resumption token for retrieving the next page
       example: 0400030bff00f07fffff9b00
+      x-graphsense-rest-test-example: '' # overrides example
+    pagesize:
+      in: query
+      name: pagesize
+      required: false
+      schema:
+        type: integer
+      description: Number of items returned in a single page
+      example: 10
+    direction:
+      in: query
+      name: direction
+      required: true
+      schema:
+        type: string
+        enum: [in, out]
+      description: Incoming or outgoing neighbors
+      example: out
     address:
       in: path
       name: address
@@ -182,9 +273,7 @@ components:
           type: string
           format: string
         height: 
-          format: int64
-          type: integer
-          minimum: 1
+          $ref: '#/components/schemas/height'
         no_txs: 
           format: int64
           type: integer
@@ -195,7 +284,7 @@ components:
       type: object
       properties:
         height: 
-          type: integer
+          $ref: '#/components/schemas/height'
         txs:
           type: array
           items:
@@ -227,7 +316,7 @@ components:
     address:
       type: object
       required:
-        - address
+        - "address"
         - balance
         - first_tx
         - last_tx
@@ -239,8 +328,7 @@ components:
         - total_spent
       properties:
         address: 
-          type: string
-          description: Address
+          $ref: '#/components/schemas/address_id'
         balance: 
           $ref: '#/components/schemas/values'
         first_tx: 
@@ -263,11 +351,38 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
-        tags:
+    address_with_tags:
+      allOf:
+        - $ref: '#/components/schemas/address'
+        - type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/tag'
+              description: Tags
+    address_txs:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        address_txs:
           type: array
           items:
-            $ref: '#/components/schemas/tag'
-          description: Tags
+            $ref: '#/components/schemas/address_tx'
+    address_tx:
+      type: object
+      properties:
+        address: 
+          $ref: '#/components/schemas/address_id'
+        height:
+          $ref: '#/components/schemas/height'
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+        value: 
+          $ref: '#/components/schemas/values'
     tx_summary:
         type: object
         required:
@@ -276,23 +391,46 @@ components:
           - tx_hash
         properties:
           height: 
-            type: integer
-            format: int64
-            description: Transaction height
+            $ref: '#/components/schemas/height'
           timestamp:
-            type: integer
-            format: int64
-            description: Transaction timestamp
+            $ref: '#/components/schemas/timestamp'
           tx_hash:
-            type: string
-            description: Transaction hash
+            $ref: '#/components/schemas/tx_hash'
     tag:
         type: object
+        required:
+          - address
+          - label
+          - active
+          - currency
         properties:
+          address:
+            $ref: '#/components/schemas/address_id'
           label:
+            type: string
+            description: Label
+          category:
               type: string
-
-
+              description: Category
+          abuse:
+              type: string
+              description: Abuses
+          tagpack_uri:
+              type: string
+              description: Tagpack URI
+          source:
+              type: string
+              description: Source 
+          lastmod:
+              type: integer
+              format: int32
+              description: Last modified
+          active:
+              type: boolean
+              description: whether the address has been ever used 
+          currency:
+              type: string
+              description: Currency
     values:
       type: object
       properties:
@@ -308,8 +446,62 @@ components:
     next_page:
       type: string
       format: string
-
-
-
+    address_id:
+      type: string
+      description: Address
+    height:
+      type: integer
+      format: int64
+      minimum: 1
+      description: Height
+    timestamp:
+      type: integer
+      format: int64
+      description: Timestamp
+    tx_hash:
+      type: string
+      description: Transaction hash
+    neighbors:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        neighbors:
+          type: array
+          items:
+            $ref: '#/components/schemas/neighbor'
+    neighbor:
+      type: object
+      required:
+        - id
+        - node_type
+        - labels
+        - balance
+        - received
+        - no_txs
+        - estimated_value
+      properties:
+        id: 
+          type: string
+          description: address or entity id
+        node_type: 
+          type: string
+          enum: [address, entity]
+          description: address or entity
+        labels: 
+          type: array
+          items: 
+            type: string
+          description: labels
+        balance: 
+          $ref: '#/components/schemas/values'
+        received: 
+          $ref: '#/components/schemas/values'
+        estimated_value: 
+          $ref: '#/components/schemas/values'
+        no_txs: 
+          type: integer
+          format: int32
+          description: number of transactions
 
 
