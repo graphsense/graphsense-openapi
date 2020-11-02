@@ -171,6 +171,39 @@ paths:
       summary: Get an addresses' neighbors in the address graph
       tags:
       - addresses
+  /{currency}/addresses/{address}/neighbors.csv:
+    get:
+      operationId: list_address_neighbors_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/direction' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get an addresses' neighbors in the address graph as CSV
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/entity:
+    get:
+      operationId: get_address_entity
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity_with_tags'
+      summary: Get an address with tags
+      tags:
+      - addresses
 components:
   parameters:
     currency:
@@ -225,7 +258,7 @@ components:
         type: string
         format: string
       description: The cryptocurrency address
-      example: '3Hrnn1UN78uXgLNvtqVXMjHwB41PmX66X4'
+      example: '1Archive1n2C579dMsAu3iC6tWzuQJz8dN'
   schemas:
     stats:
       type: object
@@ -312,7 +345,7 @@ components:
     address:
       type: object
       required:
-        - "address"
+        - address
         - balance
         - first_tx
         - last_tx
@@ -357,6 +390,64 @@ components:
               items:
                 $ref: '#/components/schemas/tag'
               description: Tags
+    entity:
+      type: object
+      required:
+        - entity
+        - balance
+        - first_tx
+        - last_tx
+        - in_degree
+        - out_degree
+        - no_addresses
+        - no_incoming_txs
+        - no_outgoing_txs
+        - total_received
+        - total_spent
+      properties:
+        entity: 
+          $ref: '#/components/schemas/entity_id'
+        balance: 
+          $ref: '#/components/schemas/values'
+        first_tx: 
+          $ref: '#/components/schemas/tx_summary'
+        last_tx: 
+          $ref: '#/components/schemas/tx_summary'
+        in_degree: 
+          type: integer
+          format: int64
+        out_degree: 
+          type: integer
+          format: int64
+        no_addresses: 
+          type: integer
+          format: int64
+        no_incoming_txs: 
+          type: integer
+          format: int64
+        no_outgoing_txs: 
+          type: integer
+          format: int64
+        total_received: 
+          $ref: '#/components/schemas/values'
+        total_spent: 
+          $ref: '#/components/schemas/values'
+    entity_with_tags:
+      allOf:
+        - $ref: '#/components/schemas/entity'
+        - type: object
+          required:
+            - tags
+            - tag_coherence
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/tag'
+              description: Tags
+            tag_coherence:
+              type: float
+              description: Tag coherence
     address_txs:
       type: object
       properties:
@@ -445,6 +536,9 @@ components:
     address_id:
       type: string
       description: Address
+    entity_id:
+      type: string
+      description: Entity id
     height:
       type: integer
       format: int64
