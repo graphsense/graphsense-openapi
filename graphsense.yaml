@@ -80,9 +80,7 @@ paths:
           content:
             text/csv: 
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/block_tx_summary'
+                type: string
       summary: Get all blocks as CSV
       tags:
       - blocks
@@ -150,9 +148,7 @@ paths:
           content:
             application/csv:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/tag'
+                type: string
       summary: Get attribution tags for a given address
       tags:
       - addresses
