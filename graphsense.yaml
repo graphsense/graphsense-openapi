@@ -239,6 +239,24 @@ paths:
       summary: Get an entity with tags
       tags:
       - entities
+  /{currency}/entities/{entity}/tags:
+    get:
+      operationId: list_entity_tags
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tag'
+      summary: Get attribution tags for a given entity
+      tags:
+      - entities
 components:
   parameters:
     currency:
