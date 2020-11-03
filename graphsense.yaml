@@ -273,6 +273,43 @@ paths:
       summary: Get attribution tags for a given entity as CSV
       tags:
       - entities
+  /{currency}/entities/{entity}/neighbors:
+    get:
+      operationId: list_entity_neighbors
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/targets' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neighbors'
+      summary: Get an entity's neighbors in the entity graph
+      tags:
+      - entities
+  /{currency}/entities/{entity}/neighbors.csv:
+    get:
+      operationId: list_entity_neighbors_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/direction' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get an entity's neighbors in the entity graph as CSV
+      tags:
+      - entities
 components:
   parameters:
     currency:
@@ -301,7 +338,6 @@ components:
         type: string
       description: Resumption token for retrieving the next page
       example: 0400030bff00f07fffff9b00
-      x-graphsense-rest-test-example: '' # overrides example
     pagesize:
       in: query
       name: pagesize
@@ -344,7 +380,17 @@ components:
         type: integer
         format: int64
       description: The entity ID
-      example: '67065'
+      example: 67065
+    targets:
+      in: query
+      name: targets
+      required: false
+      schema:
+        type: array
+        items:
+          type: integer
+          format: int64
+      description: Restrict result to given set of comma separated IDs
   schemas:
     stats:
       type: object
