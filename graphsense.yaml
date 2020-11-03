@@ -310,6 +310,24 @@ paths:
       summary: Get an entity's neighbors in the entity graph as CSV
       tags:
       - entities
+  /{currency}/entities/{entity}/addresses:
+    get:
+      operationId: list_entity_addresses
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity_addresses'
+      summary: Get an entity's addresses 
+      tags:
+      - entities
 components:
   parameters:
     currency:
@@ -743,5 +761,13 @@ components:
             $ref: '#/components/schemas/values'
           output_value: 
             $ref: '#/components/schemas/values'
-
+    entity_addresses:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
 
