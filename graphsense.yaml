@@ -223,6 +223,22 @@ paths:
       summary: Get transactions between to addresses 
       tags:
       - addresses
+  /{currency}/entities/{entity}:
+    get:
+      operationId: get_entity_with_tags
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entity_with_tags'
+      summary: Get an entity with tags
+      tags:
+      - entities
 components:
   parameters:
     currency:
@@ -286,6 +302,15 @@ components:
         type: string
       description: Neighbor address
       example: '17DfZja1713S3JRWA9jaebCKFM5anUh7GG'
+    entity:
+      in: path
+      name: entity
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: The entity ID
+      example: '67065'
   schemas:
     stats:
       type: object
@@ -465,7 +490,6 @@ components:
         - type: object
           required:
             - tags
-            - tag_coherence
           properties:
             tags:
               type: array
