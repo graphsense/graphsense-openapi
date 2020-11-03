@@ -204,6 +204,25 @@ paths:
       summary: Get an address with tags
       tags:
       - addresses
+  /{currency}/addresses/{address}/links:
+    get:
+      operationId: list_address_links
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/link'
+      summary: Get transactions between to addresses 
+      tags:
+      - addresses
 components:
   parameters:
     currency:
@@ -259,6 +278,14 @@ components:
         format: string
       description: The cryptocurrency address
       example: '1Archive1n2C579dMsAu3iC6tWzuQJz8dN'
+    neighbor:
+      in: query
+      name: neighbor
+      required: true
+      schema:
+        type: string
+      description: Neighbor address
+      example: '17DfZja1713S3JRWA9jaebCKFM5anUh7GG'
   schemas:
     stats:
       type: object
@@ -593,5 +620,24 @@ components:
           type: integer
           format: int32
           description: number of transactions
+    link:
+        type: object
+        required:
+            - tx_hash
+            - height
+            - timestamp
+            - input_value
+            - output_value
+        properties:
+          tx_hash: 
+            $ref: '#/components/schemas/tx_hash'
+          height: 
+            $ref: '#/components/schemas/height'
+          timestamp: 
+            $ref: '#/components/schemas/timestamp'
+          input_value:
+            $ref: '#/components/schemas/values'
+          output_value: 
+            $ref: '#/components/schemas/values'
 
 
