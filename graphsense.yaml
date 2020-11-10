@@ -371,6 +371,7 @@ paths:
       operationId: list_txs
       parameters:
         - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/page' 
       responses:
         "200":
           description: OK
@@ -381,6 +382,22 @@ paths:
       summary: Returns details of a specific transaction identified by its hash.
       tags:
         - txs
+  /{currency}/rates/{height}:
+    get:
+      operationId: get_exchange_rates
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/height' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rates'
+      summary: Returns exchange rate for a given height
+      tags:
+        - rates
 components:
   parameters:
     currency:
@@ -459,7 +476,7 @@ components:
       schema:
         type: string
       description: The transaction hash
-      example: 0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098
+      example: ab188013
     targets:
       in: query
       name: targets
@@ -949,7 +966,9 @@ components:
         - value
       properties:
         address: 
-          $ref: '#/components/schemas/address_id'
+          type: array
+          items:
+            $ref: '#/components/schemas/address_id'
         value:
           $ref: '#/components/schemas/values'
     txs:
@@ -961,4 +980,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tx'
+    rates:
+      type: object
+      properties:
+        height: 
+          $ref: '#/components/schemas/height'
+        rates:
+          type: object
+          properties:
+            eur:
+              type: float
+              description: EUR/Crypto rate
+            usd:
+              type: float
+              description: USD/Crypto rate
+
 
