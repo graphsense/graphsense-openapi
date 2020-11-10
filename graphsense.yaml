@@ -328,6 +328,59 @@ paths:
       summary: Get an entity's addresses 
       tags:
       - entities
+  /{currency}/entities/{entity}/search:
+    get:
+      operationId: search_entity_neighbors
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/search_key' 
+        - $ref: '#/components/parameters/search_value' 
+        - $ref: '#/components/parameters/depth' 
+        - $ref: '#/components/parameters/breadth' 
+        - $ref: '#/components/parameters/skip_num_addresses' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search_paths'
+      summary: Search deeply for matching neighbors
+      tags:
+      - entities
+  /{currency}/txs/{tx_hash}:
+    get:
+      operationId: get_tx
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/tx_hash' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tx'
+      summary: Returns details of a specific transaction identified by its hash.
+      tags:
+        - txs
+  /{currency}/txs:
+    get:
+      operationId: list_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs'
+      summary: Returns details of a specific transaction identified by its hash.
+      tags:
+        - txs
 components:
   parameters:
     currency:
@@ -399,6 +452,14 @@ components:
         format: int64
       description: The entity ID
       example: 67065
+    tx_hash:
+      in: path
+      name: tx_hash
+      required: true
+      schema:
+        type: string
+      description: The transaction hash
+      example: 0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098
     targets:
       in: query
       name: targets
@@ -410,6 +471,63 @@ components:
           type: integer
           format: int64
       description: Restrict result to given set of comma separated IDs
+    search_key:
+      in: query
+      name: key
+      description: "Match neighbors against one and only one of these properties:
+        - the category the entity belongs to
+        - addresses the entity contains
+        - total_received: amount the entity received in total
+        - balance: amount the entity holds finally"
+      required: true
+      schema:
+        type: string
+        enum: 
+          - category
+          - addresses
+          - total_received
+          - balance
+      example: category
+    search_value:
+      in: query
+      name: value
+      required: true
+      style: simple
+      description: "If key is
+          - category: comma separated list of category names
+          - addresses: comma separated list of address IDs
+          - total_received/balance: comma separated tuple of (currency, min, max)"
+      schema:
+        type: array
+        items:
+          type: string
+      example: Miner
+    depth:
+        in: query
+        name: depth
+        required: true
+        description: How many hops should the transaction graph be searched
+        schema:
+          type: integer
+          format: int32
+          maximum: 7
+    breadth:
+        in: query
+        name: breadth
+        required: false
+        description: How many siblings of each neighbor should be tried
+        schema:
+          type: integer
+          format: int32
+          default: 16
+    skip_num_addresses:
+        in: query
+        name: skip_num_addresses
+        required: false
+        description: Skip entities containing more addresses
+        schema:
+          type: integer
+          format: int32
   schemas:
     stats:
       type: object
@@ -571,8 +689,7 @@ components:
           type: integer
           format: int64
         no_addresses: 
-          type: integer
-          format: int64
+          $ref: '#/components/schemas/no_addresses'
         no_incoming_txs: 
           type: integer
           format: int64
@@ -701,6 +818,10 @@ components:
     tx_hash:
       type: string
       description: Transaction hash
+    no_addresses:
+      format: int64
+      type: integer
+      description: number of contained addresses
     neighbors:
       type: object
       properties:
@@ -771,4 +892,73 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/address'
+    search_paths:
+      type: object
+      properties:
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_paths'
+          description: Paths to matching entities
+        node:
+          $ref: '#/components/schemas/entity_with_tags'
+        relation:
+          $ref: '#/components/schemas/neighbor'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address_with_tags'
+    tx:
+      type: object
+      required:
+        - tx_hash
+        - coinbase
+        - height
+        - inputs
+        - outputs
+        - timestamp
+        - total_input
+        - total_output
+      properties:
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+        coinbase:
+          type: boolean
+          description: Coinbase transaction flag
+        height:
+          $ref: '#/components/schemas/height'
+        inputs:
+          $ref: '#/components/schemas/tx_values'
+        outputs:
+          $ref: '#/components/schemas/tx_values'
+        timestamp: 
+          $ref: '#/components/schemas/timestamp'
+        total_input:
+          $ref: '#/components/schemas/values'
+        total_output:
+          $ref: '#/components/schemas/values'
+    tx_values:
+      type: array
+      description: Transaction inputs/outputs
+      items:
+        $ref: '#/components/schemas/tx_value'
+    tx_value:
+      type: object
+      required:
+        - address
+        - value
+      properties:
+        address: 
+          $ref: '#/components/schemas/address_id'
+        value:
+          $ref: '#/components/schemas/values'
+    txs:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/tx'
 
