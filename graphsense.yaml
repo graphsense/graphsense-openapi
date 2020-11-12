@@ -642,6 +642,8 @@ components:
       required: true
       schema:
         type: string
+        minLength: 3
+        pattern: '^[\w ]+$'
       description: It can be (the beginning of) an address, a transaction or a label
       example: foo
     limit:
@@ -660,7 +662,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/currency_stats'
-       # TODO add tools, notes, data_sources?
+        version:
+          $ref: '#/components/schemas/stats_version'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/stats_tool'
+        tags_source:
+          $ref: '#/components/schemas/stats_tags_source'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/stats_note'
+    stats_version:
+      type: object
+      properties:
+        nr: 
+          type: string
+        hash:
+          type: string
+        timestamp:
+          type: string
+        file: 
+          type: string
+    stats_tool:
+      type: object
+      properties:
+        visible_name:
+          type: string
+        id:
+          type: string
+        version:
+          type: string
+        titanium_replayable:
+          type: boolean
+        responsible_for:
+          type: array
+          items:
+            type: string
+    stats_tags_source:
+      type: object
+      properties:
+        visible_name: 
+          type: string
+        id:
+          type: string
+        version:
+          type: string
+        report_uuid:
+          type: string
+    stats_note:
+      type: object
+      properties:
+        note:
+          type: string
     currency_stats:
       title: statistics of a cryptocurrency
       type: object
@@ -688,6 +743,36 @@ components:
         timestamp:
           format: int64
           type: integer
+        tools:
+          type: array
+          items:
+            type: string
+        notes:
+          type: array
+          items:
+            type: string
+        data_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/stats_ledger'
+    stats_ledger:
+      type: object
+      properties:
+        visible_name:
+          type: string
+        id:
+          type: string
+        version:
+          $ref: '#/components/schemas/stats_ledger_version'
+        report_uuid:
+          type: string
+    stats_ledger_version:
+      type: object
+      properties:
+        nr:
+          type: string
+        timestamp:
+          type: string
     block:
       type: object
       properties:
