@@ -67,7 +67,6 @@ paths:
       summary: Get all blocks (100 per page)
       tags:
       - blocks
-
   /{currency}/blocks/{height}/txs.csv:
     get:
       operationId: list_block_txs_csv
@@ -398,10 +397,69 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
+  /tags:
+    get:
+      operationId: list_tags
+      parameters:
+        - $ref: '#/components/parameters/currency_query' 
+        - $ref: '#/components/parameters/label' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tag'
+      summary: Returns the tags associated with a given label
+      tags:
+        - tags
+  /tags/taxonomies:
+    get:
+      operationId: list_taxonomies
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/taxonomy'
+      summary: Returns the supported taxonomies
+      tags:
+        - tags
+  /tags/taxonomies/{taxonomy}/concepts:
+    get:
+      operationId: list_concepts
+      parameters:
+        - $ref: '#/components/parameters/taxonomy' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/concept'
+      summary: Returns the supported concepts of a taxonomy
+      tags:
+        - tags
 components:
   parameters:
     currency:
       in: path
+      name: currency
+      required: true
+      schema:
+        type: string
+        format: string
+      description: The cryptocurrency (e.g., btc)
+      example: 'btc'
+    currency_query:
+      in: query
       name: currency
       required: true
       schema:
@@ -545,6 +603,22 @@ components:
         schema:
           type: integer
           format: int32
+    label:
+      in: query
+      name: label
+      required: true
+      schema:
+        type: string
+      description: The label of an entity
+      example: cimedy
+    taxonomy:
+      in: path
+      name: taxonomy
+      required: true
+      schema:
+        type: string
+      description: The taxonomy
+      example: foo
   schemas:
     stats:
       type: object
@@ -778,8 +852,7 @@ components:
           address:
             $ref: '#/components/schemas/address_id'
           label:
-            type: string
-            description: Label
+            $ref: '#/components/schemas/label'
           category:
               type: string
               description: Category
@@ -994,5 +1067,45 @@ components:
             usd:
               type: float
               description: USD/Crypto rate
+    taxonomy:
+      type: object
+      required:
+        - taxonomy
+        - uri
+      properties:
+        taxonomy:
+          $ref: '#/components/schemas/taxonomy_key'
+        uri:
+          $ref: '#/components/schemas/uri'
+    concept:
+      type: object
+      required:
+        - label
+        - taxonomy
+        - uri
+        - description
+        - id
+      properties:
+        label:
+          $ref: '#/components/schemas/label'
+        taxonomy:
+          $ref: '#/components/schemas/taxonomy_key'
+        uri:
+          $ref: '#/components/schemas/uri'
+        description:
+          type: string
+          description: Description
+        id:
+          type: string
+          description: ID
+    taxonomy_key:
+      type: string
+      description: Taxonomy
+    label:
+      type: string
+      description: Label
+    uri:
+      type: string
+      description: URI
 
 
