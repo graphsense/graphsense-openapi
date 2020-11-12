@@ -19,6 +19,23 @@ paths:
       summary: Get statistics of supported currencies
       tags:
       - general
+  /search:
+    get:
+      operationId: search
+      parameters:
+        - $ref: '#/components/parameters/currency_query' 
+        - $ref: '#/components/parameters/search_query' 
+        - $ref: '#/components/parameters/limit' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search_result'
+      summary: Returns matching addresses, transactions and labels
+      tags:
+      - general
   /{currency}/blocks:
     get:
       operationId: list_blocks
@@ -461,7 +478,7 @@ components:
     currency_query:
       in: query
       name: currency
-      required: true
+      required: false
       schema:
         type: string
         format: string
@@ -619,6 +636,22 @@ components:
         type: string
       description: The taxonomy
       example: foo
+    search_query:
+      in: query
+      name: q
+      required: true
+      schema:
+        type: string
+      description: It can be (the beginning of) an address, a transaction or a label
+      example: foo
+    limit:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+      description: Maximum number of search results
+      example: 10
   schemas:
     stats:
       type: object
@@ -1107,5 +1140,40 @@ components:
     uri:
       type: string
       description: URI
+    search_result:
+      type: object
+      properties:
+        currencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_by_currency'
+        labels:
+          $ref: '#/components/schemas/search_result_labels'
+    search_result_by_currency:
+      type: object
+      properties:
+        currency: 
+          type: string
+          description: Currency
+        addresses:
+          type: array
+          description: The list of found addresses
+          items: 
+            type: string
+        txs:
+          type: array
+          description: The list of found transactions
+          items: 
+            type: string
+    search_result_labels:
+      type: array
+      description: The list of matching labels
+      items:
+        type: string
+        
+
+
+
+
 
 
