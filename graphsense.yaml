@@ -236,7 +236,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/link'
-      summary: Get transactions between to addresses 
+      summary: Get transactions between two addresses 
       tags:
       - addresses
   /{currency}/entities/{entity}:
