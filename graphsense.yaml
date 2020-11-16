@@ -134,6 +134,22 @@ paths:
       summary: Get all transactions an address has been involved in
       tags:
       - addresses
+  /{currency}/addresses/{address}/txs.csv:
+    get:
+      operationId: list_address_txs_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+      summary: Get all transactions an address has been involved in as CSV
+      tags:
+      - addresses
   /{currency}/addresses/{address}/tags:
     get:
       operationId: list_address_tags
@@ -237,6 +253,23 @@ paths:
                 items:
                   $ref: '#/components/schemas/link'
       summary: Get transactions between two addresses 
+      tags:
+      - addresses
+  /{currency}/addresses/{address}/links.csv:
+    get:
+      operationId: list_address_links_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get transactions between two addresses as CSV
       tags:
       - addresses
   /{currency}/entities/{entity}:
@@ -344,6 +377,22 @@ paths:
       summary: Get an entity's addresses 
       tags:
       - entities
+  /{currency}/entities/{entity}/addresses.csv:
+    get:
+      operationId: list_entity_addresses_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get an entity's addresses as CSV
+      tags:
+      - entities
   /{currency}/entities/{entity}/search:
     get:
       operationId: search_entity_neighbors
@@ -395,7 +444,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/txs'
-      summary: Returns details of a specific transaction identified by its hash.
+      summary: Returns transactions
       tags:
         - txs
   /{currency}/rates/{height}:
