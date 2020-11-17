@@ -971,7 +971,8 @@ components:
                 $ref: '#/components/schemas/tag'
               description: Tags
             tag_coherence:
-              type: float
+              type: number
+              format: float
               description: Tag coherence
     address_txs:
       type: object
@@ -1229,10 +1230,12 @@ components:
           type: object
           properties:
             eur:
-              type: float
+              type: number
+              format: float
               description: EUR/Crypto rate
             usd:
-              type: float
+              type: number
+              format: float
               description: USD/Crypto rate
     taxonomy:
       type: object
