@@ -605,7 +605,6 @@ components:
       in: query
       name: targets
       required: false
-      style: simple
       schema:
         type: array
         items:
@@ -633,7 +632,6 @@ components:
       in: query
       name: value
       required: true
-      style: simple
       description: "If key is
           - category: comma separated list of category names
           - addresses: comma separated list of address IDs
