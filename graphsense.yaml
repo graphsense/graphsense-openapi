@@ -52,6 +52,21 @@ paths:
       summary: Get all blocks
       tags:
       - blocks
+  /eth/blocks/{height}:
+    get:
+      operationId: get_block_eth
+      parameters:
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/block_eth'
+      summary: Get a ethereum block by its height
+      tags:
+      - blocks
   /{currency}/blocks/{height}:
     get:
       operationId: get_block
@@ -1305,6 +1320,20 @@ components:
       description: The list of matching labels
       items:
         type: string
+    block_eth:
+      type: object
+      properties:
+        block_hash:
+          type: string
+          format: string
+        height: 
+          $ref: '#/components/schemas/height'
+        no_txs: 
+          format: int64
+          type: integer
+        timestamp: 
+          format: int64
+          type: integer
         
 
 
