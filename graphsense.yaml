@@ -52,19 +52,19 @@ paths:
       summary: Get all blocks
       tags:
       - blocks
-  /eth/blocks/{height}:
+  /eth/blocks:
     get:
-      operationId: get_block_eth
+      operationId: list_blocks_eth
       parameters:
-        - $ref: '#/components/parameters/height'
+        - $ref: '#/components/parameters/page'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/block_eth'
-      summary: Get a ethereum block by its height
+                $ref: '#/components/schemas/blocks_eth'
+      summary: Get all blocks
       tags:
       - blocks
   /{currency}/blocks/{height}:
@@ -81,6 +81,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/block'
       summary: Get a block by its height
+      tags:
+      - blocks
+  /eth/blocks/{height}:
+    get:
+      operationId: get_block_eth
+      parameters:
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/block_eth'
+      summary: Get a ethereum block by its height
       tags:
       - blocks
   /{currency}/blocks/{height}/txs:
@@ -882,6 +897,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/block'
+    blocks_eth:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/block_eth'
     address:
       type: object
       required:
