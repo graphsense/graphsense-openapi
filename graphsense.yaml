@@ -111,7 +111,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/block_txs'
-      summary: Get all blocks (100 per page)
+      summary: Get block transactions (100 per page)
       tags:
       - blocks
   /{currency}/blocks/{height}/txs.csv:
@@ -127,7 +127,22 @@ paths:
             text/csv: 
               schema:
                 type: string
-      summary: Get all blocks as CSV
+      summary: Get block transactions as CSV
+      tags:
+      - blocks
+  /eth/blocks/{height}/txs:
+    get:
+      operationId: list_block_txs_eth
+      parameters:
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_eth'
+      summary: Get block transactions (100 per page)
       tags:
       - blocks
   /{currency}/addresses/{address}:
@@ -1258,6 +1273,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tx'
+    txs_eth:
+      type: object
+      properties:
+        txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/tx_eth'
+    tx_eth:
+      type: object
+      required:
+        - tx_hash
+        - height
+        - timestamp
+        - values
+      properties:
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+        height:
+          $ref: '#/components/schemas/height'
+        timestamp: 
+          $ref: '#/components/schemas/timestamp'
+        values:
+          $ref: '#/components/schemas/values'
     rates:
       type: object
       properties:
