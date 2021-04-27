@@ -145,6 +145,21 @@ paths:
       summary: Get block transactions (100 per page)
       tags:
       - blocks
+  /eth/blocks/{height}/txs.csv:
+    get:
+      operationId: list_block_txs_csv_eth
+      parameters:
+        - $ref: '#/components/parameters/height'
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+      summary: Get block transactions as CSV
+      tags:
+      - blocks
   /{currency}/addresses/{address}:
     get:
       operationId: get_address_with_tags
