@@ -233,7 +233,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/entity_with_tags'
-      summary: Get an address with tags
+      summary: Get the entity of an address
       tags:
       - addresses
   /{currency}/addresses/{address}/links:
