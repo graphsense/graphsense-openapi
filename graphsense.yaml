@@ -210,6 +210,38 @@ paths:
       summary: Get all transactions an address has been involved in as CSV
       tags:
       - addresses
+  /eth/addresses/{address}/txs:
+    get:
+      operationId: list_address_txs_eth
+      parameters:
+        - $ref: '#/components/parameters/hex_address' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_eth'
+      summary: Get all transactions an address has been involved in
+      tags:
+      - addresses
+  /eth/addresses/{address}/txs.csv:
+    get:
+      operationId: list_address_txs_csv_eth
+      parameters:
+        - $ref: '#/components/parameters/hex_address' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+      summary: Get all transactions an address has been involved in as CSV
+      tags:
+      - addresses
   /{currency}/addresses/{address}/tags:
     get:
       operationId: list_address_tags
@@ -636,6 +668,15 @@ components:
         format: string
       description: The cryptocurrency address
       example: '1Archive1n2C579dMsAu3iC6tWzuQJz8dN'
+    hex_address:
+      in: path
+      name: address
+      required: true
+      schema:
+        type: string
+        format: string
+      description: The cryptocurrency address in hexadecimal representation
+      example: '123456'
     neighbor:
       in: query
       name: neighbor
@@ -1291,6 +1332,8 @@ components:
     txs_eth:
       type: object
       properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
         txs:
           type: array
           items:
