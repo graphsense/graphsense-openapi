@@ -523,6 +523,21 @@ paths:
       summary: Returns details of a specific transaction identified by its hash.
       tags:
         - txs
+  /eth/txs/{tx_hash}:
+    get:
+      operationId: get_tx_eth
+      parameters:
+        - $ref: '#/components/parameters/tx_hash' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tx_eth'
+      summary: Returns details of a specific transaction identified by its hash.
+      tags:
+        - txs
   /{currency}/txs:
     get:
       operationId: list_txs
