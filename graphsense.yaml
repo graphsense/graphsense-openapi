@@ -705,10 +705,9 @@ components:
       name: entity
       required: true
       schema:
-        type: integer
-        format: int64
+        type: string
       description: The entity ID
-      example: 67065
+      example: '67065'
     tx_hash:
       in: path
       name: tx_hash
@@ -724,8 +723,7 @@ components:
       schema:
         type: array
         items:
-          type: integer
-          format: int64
+          type: string
       description: Restrict result to given set of comma separated IDs
     search_key:
       in: query
