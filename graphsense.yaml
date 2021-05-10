@@ -244,7 +244,7 @@ paths:
       - addresses
   /{currency}/addresses/{address}/tags:
     get:
-      operationId: list_address_tags
+      operationId: list_tags_by_address
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
@@ -256,13 +256,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/tag'
+                  $ref: '#/components/schemas/address_tag'
       summary: Get attribution tags for a given address
       tags:
       - addresses
   /{currency}/addresses/{address}/tags.csv:
     get:
-      operationId: list_address_tags_csv
+      operationId: list_tags_by_address_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
@@ -382,7 +382,7 @@ paths:
       - entities
   /{currency}/entities/{entity}/tags:
     get:
-      operationId: list_entity_tags
+      operationId: list_tags_by_entity
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
@@ -394,13 +394,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/tag'
+                  $ref: '#/components/schemas/entity_tag'
       summary: Get attribution tags for a given entity
       tags:
       - entities
   /{currency}/entities/{entity}/tags.csv:
     get:
-      operationId: list_entity_tags_csv
+      operationId: list_tags_by_entity_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
@@ -572,7 +572,7 @@ paths:
         - rates
   /tags:
     get:
-      operationId: list_tags
+      operationId: list_address_tags
       parameters:
         - $ref: '#/components/parameters/currency_query' 
         - $ref: '#/components/parameters/label' 
@@ -584,8 +584,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/tag'
-      summary: Returns the tags associated with a given label
+                  $ref: '#/components/schemas/address_tag'
+      summary: Returns the address tags associated with a given label
       tags:
         - tags
   /tags/taxonomies:
@@ -1118,52 +1118,67 @@ components:
         value: 
           $ref: '#/components/schemas/values'
     tx_summary:
-        type: object
-        required:
-          - height
-          - timestamp
-          - tx_hash
-        properties:
-          height: 
-            $ref: '#/components/schemas/height'
-          timestamp:
-            $ref: '#/components/schemas/timestamp'
-          tx_hash:
-            $ref: '#/components/schemas/tx_hash'
+      type: object
+      required:
+        - height
+        - timestamp
+        - tx_hash
+      properties:
+        height: 
+          $ref: '#/components/schemas/height'
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+    address_tag:
+      allOf:
+        - $ref: '#/components/schemas/tag'
+        - type: object
+          required:
+            - address
+          properties:
+            address:
+              $ref: '#/components/schemas/address_id'
+    entity_tag:
+      allOf:
+        - $ref: '#/components/schemas/tag'
+        - type: object
+          required:
+            - entity
+          properties:
+            entity:
+              $ref: '#/components/schemas/entity_id'
     tag:
-        type: object
-        required:
-          - address
-          - label
-          - active
-          - currency
-        properties:
-          address:
-            $ref: '#/components/schemas/address_id'
-          label:
-            $ref: '#/components/schemas/label'
-          category:
-              type: string
-              description: Category
-          abuse:
-              type: string
-              description: Abuses
-          tagpack_uri:
-              type: string
-              description: Tagpack URI
-          source:
-              type: string
-              description: Source 
-          lastmod:
-              type: integer
-              format: int32
-              description: Last modified
-          active:
-              type: boolean
-              description: whether the address has been ever used 
-          currency:
-              type: string
-              description: Currency
+      type: object
+      required:
+        - label
+        - active
+        - currency
+      properties:
+        label:
+          $ref: '#/components/schemas/label'
+        category:
+          type: string
+          description: Category
+        abuse:
+          type: string
+          description: Abuses
+        tagpack_uri:
+          type: string
+          description: Tagpack URI
+        source:
+          type: string
+          description: Source 
+        lastmod:
+          type: integer
+          format: int32
+          description: Last modified
+        active:
+          type: boolean
+          description: whether the address has been ever used 
+        currency:
+          type: string
+          description: Currency
     values:
       type: object
       properties:
@@ -1215,7 +1230,7 @@ components:
       required:
         - id
         - node_type
-        - labels
+        - has_labels
         - balance
         - received
         - no_txs
@@ -1228,11 +1243,9 @@ components:
           type: string
           enum: [address, entity]
           description: address or entity
-        labels: 
-          type: array
-          items: 
-            type: string
-          description: labels
+        has_labels: 
+          type: boolean
+          description: has labels
         balance: 
           $ref: '#/components/schemas/values'
         received: 
