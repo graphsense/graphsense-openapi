@@ -364,6 +364,38 @@ paths:
       summary: Get transactions between two addresses as CSV
       tags:
       - addresses
+  /eth/addresses/{address}/links:
+    get:
+      operationId: list_address_links_eth
+      parameters:
+        - $ref: '#/components/parameters/hex_address' 
+        - $ref: '#/components/parameters/hex_neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_eth'
+      summary: Get transactions between two addresses 
+      tags:
+      - addresses
+  /eth/addresses/{address}/links.csv:
+    get:
+      operationId: list_address_links_csv_eth
+      parameters:
+        - $ref: '#/components/parameters/hex_address' 
+        - $ref: '#/components/parameters/hex_neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get transactions between two addresses as CSV
+      tags:
+      - addresses
   /{currency}/entities/{entity}:
     get:
       operationId: get_entity_with_tags
@@ -700,6 +732,14 @@ components:
         type: string
       description: Neighbor address
       example: '17DfZja1713S3JRWA9jaebCKFM5anUh7GG'
+    hex_neighbor:
+      in: query
+      name: neighbor
+      required: true
+      schema:
+        type: string
+      description: Neighbor address in hexadecimal representation
+      example: '123456'
     entity:
       in: path
       name: entity
