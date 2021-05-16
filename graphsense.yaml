@@ -130,36 +130,6 @@ paths:
       summary: Get block transactions as CSV
       tags:
       - blocks
-  /eth/blocks/{height}/txs:
-    get:
-      operationId: list_block_txs_eth
-      parameters:
-        - $ref: '#/components/parameters/height'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/txs_eth'
-      summary: Get block transactions (100 per page)
-      tags:
-      - blocks
-  /eth/blocks/{height}/txs.csv:
-    get:
-      operationId: list_block_txs_csv_eth
-      parameters:
-        - $ref: '#/components/parameters/height'
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get block transactions as CSV
-      tags:
-      - blocks
   /{currency}/addresses/{address}:
     get:
       operationId: get_address_with_tags
@@ -200,38 +170,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get all transactions an address has been involved in as CSV
-      tags:
-      - addresses
-  /eth/addresses/{address}/txs:
-    get:
-      operationId: list_address_txs_eth
-      parameters:
-        - $ref: '#/components/parameters/hex_address' 
-        - $ref: '#/components/parameters/page' 
-        - $ref: '#/components/parameters/pagesize' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/txs_eth'
-      summary: Get all transactions an address has been involved in
-      tags:
-      - addresses
-  /eth/addresses/{address}/txs.csv:
-    get:
-      operationId: list_address_txs_csv_eth
-      parameters:
-        - $ref: '#/components/parameters/hex_address' 
       responses:
         "200":
           description: OK
@@ -362,22 +300,6 @@ paths:
               schema:
                 type: string
       summary: Get transactions between two addresses as CSV
-      tags:
-      - addresses
-  /eth/addresses/{address}/links:
-    get:
-      operationId: list_address_links_eth
-      parameters:
-        - $ref: '#/components/parameters/hex_address' 
-        - $ref: '#/components/parameters/hex_neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/txs_eth'
-      summary: Get transactions between two addresses 
       tags:
       - addresses
   /eth/addresses/{address}/links.csv:
@@ -552,21 +474,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/tx'
-      summary: Returns details of a specific transaction identified by its hash.
-      tags:
-        - txs
-  /eth/txs/{tx_hash}:
-    get:
-      operationId: get_tx_eth
-      parameters:
-        - $ref: '#/components/parameters/tx_hash' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/tx_eth'
       summary: Returns details of a specific transaction identified by its hash.
       tags:
         - txs
@@ -1224,11 +1131,11 @@ components:
       type: object
       properties:
         eur:
-          type: integer
-          format: int64
+          type: number
+          format: float
         usd:
-          type: integer
-          format: int64
+          type: number
+          format: float
         value:
           type: integer
           format: int64
@@ -1250,6 +1157,9 @@ components:
       type: integer
       format: int64
       description: Timestamp
+    currency_type:
+      type: string
+      description: Discriminator for different kinds of currency types
     tx_hash:
       type: string
       description: Transaction hash
@@ -1341,9 +1251,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/address_with_tags'
-    tx:
+    tx_utxo:
       type: object
       required:
+        - currency_type
         - tx_hash
         - coinbase
         - height
@@ -1353,6 +1264,9 @@ components:
         - total_input
         - total_output
       properties:
+        currency_type:
+          type: string
+          default: 'utxo'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         coinbase:
@@ -1396,23 +1310,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tx'
-    txs_eth:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/tx_eth'
-    tx_eth:
+    tx_account:
       type: object
       required:
+        - currency_type
         - tx_hash
         - height
         - timestamp
         - values
       properties:
+        currency_type:
+          type: string
+          default: 'account'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         height:
@@ -1421,6 +1330,15 @@ components:
           $ref: '#/components/schemas/timestamp'
         values:
           $ref: '#/components/schemas/values'
+    tx:
+      oneOf:
+        - $ref: '#/components/schemas/tx_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'currency_type'
+        mapping:
+          utxo: '#/components/schemas/tx_utxo'
+          account: '#/components/schemas/tx_account'
     rates:
       type: object
       properties:
