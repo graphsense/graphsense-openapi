@@ -52,21 +52,6 @@ paths:
       summary: Get all blocks
       tags:
       - blocks
-  /eth/blocks:
-    get:
-      operationId: list_blocks_eth
-      parameters:
-        - $ref: '#/components/parameters/page'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/blocks_eth'
-      summary: Get all blocks
-      tags:
-      - blocks
   /{currency}/blocks/{height}:
     get:
       operationId: get_block
@@ -81,21 +66,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/block'
       summary: Get a block by its height
-      tags:
-      - blocks
-  /eth/blocks/{height}:
-    get:
-      operationId: get_block_eth
-      parameters:
-        - $ref: '#/components/parameters/height'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/block_eth'
-      summary: Get a ethereum block by its height
       tags:
       - blocks
   /{currency}/blocks/{height}/txs:
@@ -925,15 +895,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/block'
-    blocks_eth:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        blocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/block_eth'
     address:
       type: object
       required:
@@ -1450,24 +1411,3 @@ components:
       description: The list of matching labels
       items:
         type: string
-    block_eth:
-      type: object
-      properties:
-        block_hash:
-          type: string
-          format: string
-        height: 
-          $ref: '#/components/schemas/height'
-        no_txs: 
-          format: int64
-          type: integer
-        timestamp: 
-          format: int64
-          type: integer
-        
-
-
-
-
-
-
