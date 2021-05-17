@@ -304,22 +304,6 @@ paths:
       summary: Get transactions between two addresses as CSV
       tags:
       - addresses
-  /eth/addresses/{address}/links.csv:
-    get:
-      operationId: list_address_links_csv_eth
-      parameters:
-        - $ref: '#/components/parameters/hex_address' 
-        - $ref: '#/components/parameters/hex_neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get transactions between two addresses as CSV
-      tags:
-      - addresses
   /{currency}/entities/{entity}:
     get:
       operationId: get_entity_with_tags
@@ -909,6 +893,13 @@ components:
           account: '#/components/schemas/tx_account'
     block_tx_utxo:
       type: object
+      required:
+        - currency_type
+        - tx_hash
+        - no_inputs
+        - no_outputs
+        - total_input
+        - total_output
       properties:
         currency_type:
           type: string
@@ -1068,6 +1059,12 @@ components:
           account: '#/components/schemas/tx_account'
     address_tx_utxo:
       type: object
+      required:
+        - currency_type
+        - height
+        - timestamp
+        - tx_hash
+        - value
       properties:
         currency_type:
           type: string
@@ -1223,14 +1220,27 @@ components:
           format: int32
           description: number of transactions
     link:
+      oneOf:
+        - $ref: '#/components/schemas/link_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'currency_type'
+        mapping:
+          utxo: '#/components/schemas/link_utxo'
+          account: '#/components/schemas/tx_account'
+    link_utxo:
         type: object
         required:
-            - tx_hash
-            - height
-            - timestamp
-            - input_value
-            - output_value
+          - currency_type
+          - tx_hash
+          - height
+          - timestamp
+          - input_value
+          - output_value
         properties:
+          currency_type:
+            type: string
+            default: 'utxo'
           tx_hash: 
             $ref: '#/components/schemas/tx_hash'
           height: 
