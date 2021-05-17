@@ -110,7 +110,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/block_txs'
+                type: array
+                items:
+                  $ref: '#/components/schemas/block_tx'
       summary: Get block transactions (100 per page)
       tags:
       - blocks
@@ -896,18 +898,21 @@ components:
         timestamp: 
           format: int64
           type: integer
-    block_txs:
+    block_tx:
+      oneOf:
+        - $ref: '#/components/schemas/block_tx_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'currency_type'
+        mapping:
+          utxo: '#/components/schemas/block_tx_utxo'
+          account: '#/components/schemas/tx_account'
+    block_tx_utxo:
       type: object
       properties:
-        height: 
-          $ref: '#/components/schemas/height'
-        txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/block_tx_summary'
-    block_tx_summary:
-      type: object
-      properties:
+        currency_type:
+          type: string
+          default: 'utxo'
         tx_hash: 
           type: string
         no_inputs: 
@@ -1053,10 +1058,20 @@ components:
           items:
             $ref: '#/components/schemas/address_tx'
     address_tx:
+      oneOf:
+        - $ref: '#/components/schemas/address_tx_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'currency_type'
+        mapping:
+          utxo: '#/components/schemas/address_tx_utxo'
+          account: '#/components/schemas/tx_account'
+    address_tx_utxo:
       type: object
       properties:
-        address: 
-          $ref: '#/components/schemas/address_id'
+        currency_type:
+          type: string
+          default: 'utxo'
         height:
           $ref: '#/components/schemas/height'
         timestamp:
