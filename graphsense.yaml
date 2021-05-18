@@ -102,6 +102,24 @@ paths:
       summary: Get block transactions as CSV
       tags:
       - blocks
+  /{currency}/addresses:
+    get:
+      operationId: list_addresses
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addresses'
+      summary: Get addresses
+      tags:
+      - addresses
   /{currency}/addresses/{address}:
     get:
       operationId: get_address_with_tags
@@ -331,7 +349,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/targets' 
+        - $ref: '#/components/parameters/ids' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -621,9 +639,9 @@ components:
         type: string
       description: The transaction hash
       example: ab188013
-    targets:
+    ids:
       in: query
-      name: targets
+      name: ids
       required: false
       schema:
         type: array
@@ -945,6 +963,15 @@ components:
               items:
                 $ref: '#/components/schemas/tag'
               description: Tags
+    addresses:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
     entity:
       type: object
       required:
