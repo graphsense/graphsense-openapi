@@ -138,18 +138,19 @@ paths:
       - addresses
   /{currency}/addresses/{address}:
     get:
-      operationId: get_address_with_tags
+      operationId: get_address
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address_with_tags'
-      summary: Get an address with tags
+                $ref: '#/components/schemas/address'
+      summary: Get an address, optionally with tags
       tags:
       - addresses
   /{currency}/addresses/{address}/txs:
@@ -710,6 +711,13 @@ components:
           type: string
       description: Set of comma separated IDs
       x-graphsense-rest-test-example: '"1,2"'
+    include_tags:
+      in: query
+      name: include_tags
+      required: false
+      schema:
+        type: boolean
+      description: Whether tags should be included 
     search_key:
       in: query
       name: key
@@ -1017,16 +1025,11 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
-    address_with_tags:
-      allOf:
-        - $ref: '#/components/schemas/address'
-        - type: object
-          properties:
-            tags:
-              type: array
-              items:
-                $ref: '#/components/schemas/tag'
-              description: Tags
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/tag'
+          description: Tags
     addresses:
       type: object
       properties:
@@ -1373,7 +1376,7 @@ components:
         matching_addresses:
           type: array
           items:
-            $ref: '#/components/schemas/address_with_tags'
+            $ref: '#/components/schemas/address'
     tx_utxo:
       type: object
       required:
