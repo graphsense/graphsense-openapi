@@ -292,6 +292,24 @@ paths:
       summary: Get transactions between two addresses as CSV
       tags:
       - addresses
+  /{currency}/entities:
+    get:
+      operationId: list_entities
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entities'
+      summary: Get entities
+      tags:
+      - entities
   /{currency}/entities/{entity}:
     get:
       operationId: get_entity_with_tags
@@ -1029,6 +1047,15 @@ components:
               type: number
               format: float
               description: Tag coherence
+    entities:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/entity'
     address_txs:
       type: object
       properties:
