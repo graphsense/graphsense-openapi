@@ -125,9 +125,7 @@ paths:
       operationId: list_addresses_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
-        - $ref: '#/components/parameters/page' 
-        - $ref: '#/components/parameters/pagesize' 
+        - $ref: '#/components/parameters/ids_required'
       responses:
         "200":
           description: OK
@@ -333,9 +331,7 @@ paths:
       operationId: list_entities_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
-        - $ref: '#/components/parameters/page' 
-        - $ref: '#/components/parameters/pagesize' 
+        - $ref: '#/components/parameters/ids_required'
       responses:
         "200":
           description: OK
@@ -702,6 +698,16 @@ components:
         items:
           type: string
       description: Restrict result to given set of comma separated IDs
+    ids_required:
+      in: query
+      name: ids
+      required: true
+      schema:
+        type: array
+        items:
+          type: string
+      description: Set of comma separated IDs
+      x-graphsense-rest-test-example: '"1,2"'
     search_key:
       in: query
       name: key
