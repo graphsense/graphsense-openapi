@@ -481,7 +481,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/search_paths'
+                type: array
+                items:
+                  $ref: '#/components/schemas/search_result_level1'
       summary: Search deeply for matching neighbors
       tags:
       - entities
@@ -1319,14 +1321,49 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/address'
-    search_paths:
+    search_result_level1:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            branches:
+              type: array
+              items:
+                $ref: '#/components/schemas/search_result_level2'
+              description: Branches to matching entities
+    search_result_level2:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            branches:
+              type: array
+              items:
+                $ref: '#/components/schemas/search_result_level3'
+              description: Branches to matching entities
+    search_result_level3:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            branches:
+              type: array
+              items:
+                $ref: '#/components/schemas/search_result_level4'
+              description: Branches to matching entities
+    search_result_level4:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            branches:
+              type: array
+              items:
+                $ref: '#/components/schemas/search_result_leaf'
+              description: Branches to matching entities
+    search_result_leaf:
       type: object
       properties:
-        paths:
-          type: array
-          items:
-            $ref: '#/components/schemas/search_paths'
-          description: Paths to matching entities
         node:
           $ref: '#/components/schemas/entity_with_tags'
         relation:
