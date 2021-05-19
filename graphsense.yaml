@@ -120,6 +120,24 @@ paths:
       summary: Get addresses
       tags:
       - addresses
+  /{currency}/addresses.csv:
+    get:
+      operationId: list_addresses_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/csv:
+              schema:
+                type: string
+      summary: Get addresses as CSV
+      tags:
+      - addresses
   /{currency}/addresses/{address}:
     get:
       operationId: get_address_with_tags
@@ -308,6 +326,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/entities'
       summary: Get entities
+      tags:
+      - entities
+  /{currency}/entities.csv:
+    get:
+      operationId: list_entities_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/csv:
+              schema:
+                type: string
+      summary: Get entities as CSV
       tags:
       - entities
   /{currency}/entities/{entity}:
