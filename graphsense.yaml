@@ -373,18 +373,17 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/entity_tag'
-      summary: Get attribution tags for a given entity
+                $ref: '#/components/schemas/tags_by_entity'
+      summary: Get tags for a given entity
       tags:
       - entities
   /{currency}/entities/{entity}/tags.csv:
     get:
-      operationId: list_tags_by_entity_csv
+      operationId: list_tags_by_entity_by_level_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/tag_level' 
       responses:
         "200":
           description: OK
@@ -392,7 +391,7 @@ paths:
             application/csv:
               schema:
                 type: string
-      summary: Get attribution tags for a given entity as CSV
+      summary: Get address or entity tags for a given entity as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/neighbors:
@@ -720,6 +719,17 @@ components:
       schema:
         type: boolean
       description: Whether tags should be included 
+    tag_level:
+      in: query
+      name: level
+      required: true
+      schema:
+        type: string
+        enum:
+          - address
+          - entity
+      example: address
+      description: Whether tags on the address or entity level are requested
     search_key:
       in: query
       name: key
@@ -1030,7 +1040,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/tag'
+            $ref: '#/components/schemas/address_tag'
           description: Tags
     addresses:
       type: object
@@ -1083,10 +1093,23 @@ components:
         total_spent: 
           $ref: '#/components/schemas/values'
         tags:
+          $ref: '#/components/schemas/tags_by_entity'
+    tags_by_entity:
+      type: object
+      required:
+        - address_tags
+        - entity_tags
+      properties:
+        address_tags: 
           type: array
           items:
-            $ref: '#/components/schemas/tag'
-          description: Tags
+            $ref: '#/components/schemas/entity_tag'
+          description: Aggregated tags of contained addresses
+        entity_tags: 
+          type: array
+          items:
+            $ref: '#/components/schemas/entity_tag'
+          description: Tags of this entity
         tag_coherence:
           type: number
           format: float
