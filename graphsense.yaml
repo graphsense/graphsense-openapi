@@ -263,13 +263,14 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity_with_tags'
+                $ref: '#/components/schemas/entity'
       summary: Get the entity of an address
       tags:
       - addresses
@@ -345,18 +346,19 @@ paths:
       - entities
   /{currency}/entities/{entity}:
     get:
-      operationId: get_entity_with_tags
+      operationId: get_entity
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity_with_tags'
-      summary: Get an entity with tags
+                $ref: '#/components/schemas/entity'
+      summary: Get an entity, optionally with tags
       tags:
       - entities
   /{currency}/entities/{entity}/tags:
@@ -1080,22 +1082,15 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
-    entity_with_tags:
-      allOf:
-        - $ref: '#/components/schemas/entity'
-        - type: object
-          required:
-            - tags
-          properties:
-            tags:
-              type: array
-              items:
-                $ref: '#/components/schemas/tag'
-              description: Tags
-            tag_coherence:
-              type: number
-              format: float
-              description: Tag coherence
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/tag'
+          description: Tags
+        tag_coherence:
+          type: number
+          format: float
+          description: Tag coherence
     entities:
       type: object
       properties:
@@ -1370,7 +1365,7 @@ components:
       type: object
       properties:
         node:
-          $ref: '#/components/schemas/entity_with_tags'
+          $ref: '#/components/schemas/entity'
         relation:
           $ref: '#/components/schemas/neighbor'
         matching_addresses:
