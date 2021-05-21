@@ -682,9 +682,10 @@ components:
       name: entity
       required: true
       schema:
-        type: string
+        type: integer
+        format: int64
       description: The entity ID
-      example: '67065'
+      example: 67065
     tx_hash:
       in: path
       name: tx_hash
@@ -1242,7 +1243,8 @@ components:
       type: string
       description: Address
     entity_id:
-      type: string
+      type: integer
+      format: int64
       description: Entity id
     height:
       type: integer
