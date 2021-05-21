@@ -373,7 +373,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/tags_by_entity'
+                $ref: '#/components/schemas/tags'
       summary: Get tags for a given entity
       tags:
       - entities
@@ -539,7 +539,7 @@ paths:
         - rates
   /tags:
     get:
-      operationId: list_address_tags
+      operationId: list_tags
       parameters:
         - $ref: '#/components/parameters/currency_query' 
         - $ref: '#/components/parameters/label' 
@@ -551,8 +551,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/address_tag'
-      summary: Returns the address tags associated with a given label
+                  $ref: '#/components/schemas/tags'
+      summary: Returns address and entity tags associated with a given label
       tags:
         - tags
   /tags/taxonomies:
@@ -1094,8 +1094,8 @@ components:
         total_spent: 
           $ref: '#/components/schemas/values'
         tags:
-          $ref: '#/components/schemas/tags_by_entity'
-    tags_by_entity:
+          $ref: '#/components/schemas/tags'
+    tags:
       type: object
       required:
         - address_tags
@@ -1104,7 +1104,7 @@ components:
         address_tags: 
           type: array
           items:
-            $ref: '#/components/schemas/entity_tag'
+            $ref: '#/components/schemas/address_tag'
           description: Aggregated tags of contained addresses
         entity_tags: 
           type: array
