@@ -264,6 +264,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/include_tags'
+        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -351,6 +352,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/include_tags'
+        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -367,6 +369,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -719,7 +722,16 @@ components:
       required: false
       schema:
         type: boolean
+        default: false
       description: Whether tags should be included 
+    tag_coherence:
+      in: query
+      name: tag_coherence
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to calculate coherence of address tags
     tag_level:
       in: query
       name: level
