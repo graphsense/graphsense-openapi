@@ -228,6 +228,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -405,6 +406,7 @@ paths:
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
         - $ref: '#/components/parameters/ids' 
+        - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -724,6 +726,14 @@ components:
         type: boolean
         default: false
       description: Whether tags should be included 
+    include_labels:
+      in: query
+      name: include_labels
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether labels of tags should be included
     tag_coherence:
       in: query
       name: tag_coherence
@@ -1291,7 +1301,6 @@ components:
       required:
         - id
         - node_type
-        - has_labels
         - balance
         - received
         - no_txs
@@ -1304,9 +1313,11 @@ components:
           type: string
           enum: [address, entity]
           description: address or entity
-        has_labels: 
-          type: boolean
-          description: has labels
+        labels: 
+          type: array
+          items: 
+            type: string
+          description: labels
         balance: 
           $ref: '#/components/schemas/values'
         received: 
