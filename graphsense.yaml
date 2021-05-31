@@ -1406,6 +1406,26 @@ components:
             paths:
               type: array
               items:
+                $ref: '#/components/schemas/search_result_level5'
+              description: Branches to matching entities
+    search_result_level5:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            paths:
+              type: array
+              items:
+                $ref: '#/components/schemas/search_result_level6'
+              description: Branches to matching entities
+    search_result_level6:
+      allOf:
+        - $ref: '#/components/schemas/search_result_leaf'
+        - type: object
+          properties:
+            paths:
+              type: array
+              items:
                 $ref: '#/components/schemas/search_result_leaf'
               description: Branches to matching entities
     search_result_leaf:
