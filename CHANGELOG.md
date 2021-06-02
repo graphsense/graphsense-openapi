@@ -3,13 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## Unreleased
-
+## [0.5.0] - 2021-06-02
 ### Added
 - Ethereum support
-- Bulk retrieval enpoints for addresses and entities
+- Bulk retrieval endpoints for addresses and entities
 - Entity can have tags on the entity and the address level. 
-
 ### Changed
 - Fetch entity/address with tags optionally
 - Calculate tag coherence optionally
