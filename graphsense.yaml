@@ -248,6 +248,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/include_labels' 
       responses:
         "200":
           description: OK
@@ -426,6 +427,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/include_labels' 
       responses:
         "200":
           description: OK
