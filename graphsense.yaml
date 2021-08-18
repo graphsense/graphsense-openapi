@@ -82,8 +82,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/block_tx'
-      summary: Get block transactions (100 per page)
+                  $ref: '#/components/schemas/tx'
+      summary: Get block transactions 
       tags:
       - blocks
   /{currency}/blocks/{height}/txs.csv:
@@ -167,7 +167,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address_txs'
+                $ref: '#/components/schemas/txs_account'
       summary: Get all transactions an address has been involved in
       tags:
       - addresses
@@ -656,7 +656,7 @@ components:
         type: string
         format: string
       description: The cryptocurrency address
-      example: '1Archive1n2C579dMsAu3iC6tWzuQJz8dN'
+      example: 'addressA'
     hex_address:
       in: path
       name: address
@@ -673,7 +673,7 @@ components:
       schema:
         type: string
       description: Neighbor address
-      example: '17DfZja1713S3JRWA9jaebCKFM5anUh7GG'
+      example: 'addressE'
     hex_neighbor:
       in: query
       name: neighbor
@@ -780,7 +780,7 @@ components:
           - category: comma separated list of category names
           - addresses: comma separated list of address IDs
           - entities: comma separated list of entity IDs
-          - total_received/balance: comma separated tuple of (currency, min, max)"
+          - total_received/balance: comma separated tuple of (currency, min, max) where currency is 'value' for the cryptocurrency value or an ISO currency code"
       schema:
         type: array
         items:
@@ -980,40 +980,6 @@ components:
         timestamp: 
           format: int64
           type: integer
-    block_tx:
-      oneOf:
-        - $ref: '#/components/schemas/block_tx_utxo'
-        - $ref: '#/components/schemas/tx_account'
-      discriminator: 
-        propertyName: 'currency_type'
-        mapping:
-          utxo: '#/components/schemas/block_tx_utxo'
-          account: '#/components/schemas/tx_account'
-    block_tx_utxo:
-      type: object
-      required:
-        - currency_type
-        - tx_hash
-        - no_inputs
-        - no_outputs
-        - total_input
-        - total_output
-      properties:
-        currency_type:
-          type: string
-          default: 'utxo'
-        tx_hash: 
-          type: string
-        no_inputs: 
-          type: integer
-          format: int64
-        no_outputs:
-          type: integer
-          format: int64
-        total_input:
-          $ref: '#/components/schemas/values'
-        total_output:
-          $ref: '#/components/schemas/values'
     blocks:
       type: object
       properties:
@@ -1027,6 +993,7 @@ components:
       type: object
       required:
         - address
+        - entity
         - balance
         - first_tx
         - last_tx
@@ -1039,6 +1006,8 @@ components:
       properties:
         address: 
           $ref: '#/components/schemas/address_id'
+        entity: 
+          $ref: '#/components/schemas/entity_id'
         balance: 
           $ref: '#/components/schemas/values'
         first_tx: 
@@ -1147,44 +1116,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/entity'
-    address_txs:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        address_txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tx'
-    address_tx:
-      oneOf:
-        - $ref: '#/components/schemas/address_tx_utxo'
-        - $ref: '#/components/schemas/tx_account'
-      discriminator: 
-        propertyName: 'currency_type'
-        mapping:
-          utxo: '#/components/schemas/address_tx_utxo'
-          account: '#/components/schemas/tx_account'
-    address_tx_utxo:
-      type: object
-      required:
-        - currency_type
-        - height
-        - timestamp
-        - tx_hash
-        - value
-      properties:
-        currency_type:
-          type: string
-          default: 'utxo'
-        height:
-          $ref: '#/components/schemas/height'
-        timestamp:
-          $ref: '#/components/schemas/timestamp'
-        tx_hash:
-          $ref: '#/components/schemas/tx_hash'
-        value: 
-          $ref: '#/components/schemas/values'
     tx_summary:
       type: object
       required:
@@ -1250,12 +1181,10 @@ components:
     values:
       type: object
       properties:
-        eur:
-          type: number
-          format: float
-        usd:
-          type: number
-          format: float
+        fiat_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/rate'
         value:
           type: integer
           format: int64
@@ -1278,9 +1207,9 @@ components:
       type: integer
       format: int64
       description: Timestamp
-    currency_type:
+    tx_type:
       type: string
-      description: Discriminator for different kinds of currency types
+      description: Discriminator for different kinds of transaction types
     tx_hash:
       type: string
       description: Transaction hash
@@ -1302,10 +1231,8 @@ components:
       required:
         - id
         - node_type
-        - balance
-        - received
         - no_txs
-        - estimated_value
+        - value
       properties:
         id: 
           type: string
@@ -1319,11 +1246,7 @@ components:
           items: 
             type: string
           description: labels
-        balance: 
-          $ref: '#/components/schemas/values'
-        received: 
-          $ref: '#/components/schemas/values'
-        estimated_value: 
+        value: 
           $ref: '#/components/schemas/values'
         no_txs: 
           type: integer
@@ -1334,21 +1257,21 @@ components:
         - $ref: '#/components/schemas/link_utxo'
         - $ref: '#/components/schemas/tx_account'
       discriminator: 
-        propertyName: 'currency_type'
+        propertyName: 'tx_type'
         mapping:
           utxo: '#/components/schemas/link_utxo'
           account: '#/components/schemas/tx_account'
     link_utxo:
         type: object
         required:
-          - currency_type
+          - tx_type
           - tx_hash
           - height
           - timestamp
           - input_value
           - output_value
         properties:
-          currency_type:
+          tx_type:
             type: string
             default: 'utxo'
           tx_hash: 
@@ -1444,7 +1367,7 @@ components:
     tx_utxo:
       type: object
       required:
-        - currency_type
+        - tx_type
         - tx_hash
         - coinbase
         - height
@@ -1454,7 +1377,7 @@ components:
         - total_input
         - total_output
       properties:
-        currency_type:
+        tx_type:
           type: string
           default: 'utxo'
         tx_hash:
@@ -1500,16 +1423,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tx'
+    txs_account:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/tx_account'
     tx_account:
       type: object
       required:
-        - currency_type
+        - tx_type
         - tx_hash
         - height
         - timestamp
-        - values
+        - value
       properties:
-        currency_type:
+        tx_type:
           type: string
           default: 'account'
         tx_hash:
@@ -1518,14 +1450,14 @@ components:
           $ref: '#/components/schemas/height'
         timestamp: 
           $ref: '#/components/schemas/timestamp'
-        values:
+        value:
           $ref: '#/components/schemas/values'
     tx:
       oneOf:
         - $ref: '#/components/schemas/tx_utxo'
         - $ref: '#/components/schemas/tx_account'
       discriminator: 
-        propertyName: 'currency_type'
+        propertyName: 'tx_type'
         mapping:
           utxo: '#/components/schemas/tx_utxo'
           account: '#/components/schemas/tx_account'
@@ -1535,16 +1467,19 @@ components:
         height: 
           $ref: '#/components/schemas/height'
         rates:
-          type: object
-          properties:
-            eur:
-              type: number
-              format: float
-              description: EUR/Crypto rate
-            usd:
-              type: number
-              format: float
-              description: USD/Crypto rate
+          type: array
+          items:
+            $ref: '#/components/schemas/rate'
+    rate:
+      type: object
+      properties:
+        code:
+          type: string
+          description: iso currency code
+        value:
+          type: number
+          format: float
+          description: exchange rate
     taxonomy:
       type: object
       required:
