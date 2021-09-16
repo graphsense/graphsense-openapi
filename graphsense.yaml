@@ -706,7 +706,8 @@ components:
       schema:
         type: array
         items:
-          type: string
+          type: integer
+          format: int32
       description: Restrict result to given set of comma separated IDs
     ids_required:
       in: query
