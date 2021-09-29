@@ -107,7 +107,7 @@ paths:
       operationId: list_addresses
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/address_ids'
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -125,7 +125,7 @@ paths:
       operationId: list_addresses_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids_required'
+        - $ref: '#/components/parameters/address_ids_required'
       responses:
         "200":
           description: OK
@@ -290,9 +290,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/link'
+                $ref: '#/components/schemas/links'
       summary: Get transactions between two addresses 
       tags:
       - addresses
@@ -318,7 +316,7 @@ paths:
       operationId: list_entities
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
+        - $ref: '#/components/parameters/entity_ids'
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -336,7 +334,7 @@ paths:
       operationId: list_entities_csv
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids_required'
+        - $ref: '#/components/parameters/entity_ids_required'
       responses:
         "200":
           description: OK
@@ -406,7 +404,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/ids' 
+        - $ref: '#/components/parameters/entity_ids' 
         - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -436,6 +434,40 @@ paths:
               schema:
                 type: string
       summary: Get an entity's neighbors in the entity graph as CSV
+      tags:
+      - entities
+  /{currency}/entities/{entity}/links:
+    get:
+      operationId: list_entity_links
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/entity_neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/links'
+      summary: Get transactions between two entities
+      tags:
+      - entities
+  /{currency}/entities/{entity}/links.csv:
+    get:
+      operationId: list_entity_links_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/entity_neighbor' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+      summary: Get transactions between two entities as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/addresses:
@@ -674,6 +706,15 @@ components:
         type: string
       description: Neighbor address
       example: 'addressE'
+    entity_neighbor:
+      in: query
+      name: neighbor
+      required: true
+      schema:
+        type: integer
+        format: int32
+      description: Neighbor entity
+      example: 123456
     hex_neighbor:
       in: query
       name: neighbor
@@ -699,7 +740,16 @@ components:
         type: string
       description: The transaction hash
       example: ab188013
-    ids:
+    address_ids:
+      in: query
+      name: ids
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      description: Restrict result to given set of comma separated addresses
+    entity_ids:
       in: query
       name: ids
       required: false
@@ -709,7 +759,7 @@ components:
           type: integer
           format: int32
       description: Restrict result to given set of comma separated IDs
-    ids_required:
+    address_ids_required:
       in: query
       name: ids
       required: true
@@ -719,6 +769,17 @@ components:
           type: string
       description: Set of comma separated IDs
       x-graphsense-rest-test-example: '"1,2"'
+    entity_ids_required:
+      in: query
+      name: ids
+      required: true
+      schema:
+        type: array
+        items:
+          type: integer
+          format: int32
+      description: Set of comma separated IDs
+      x-graphsense-rest-test-example: '1,2'
     include_tags:
       in: query
       name: include_tags
@@ -1259,6 +1320,15 @@ components:
           type: integer
           format: int32
           description: number of transactions
+    links:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/link'
     link:
       oneOf:
         - $ref: '#/components/schemas/link_utxo'
