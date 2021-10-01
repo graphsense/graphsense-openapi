@@ -436,6 +436,40 @@ paths:
       summary: Get an entity's neighbors in the entity graph as CSV
       tags:
       - entities
+  /{currency}/entities/{entity}/txs:
+    get:
+      operationId: list_entity_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_account'
+      summary: Get all transactions an entity has been involved in
+      tags:
+      - entities
+  /{currency}/entities/{entity}/txs.csv:
+    get:
+      operationId: list_entity_txs_csv
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+      summary: Get all transactions an entity has been involved in as CSV
+      tags:
+      - entities
   /{currency}/entities/{entity}/links:
     get:
       operationId: list_entity_links
