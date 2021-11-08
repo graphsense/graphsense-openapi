@@ -823,25 +823,25 @@ components:
         name:
           type: string
         no_blocks:
-          format: int64
+          format: int32
           type: integer
         no_address_relations:
-          format: int64
+          format: int32
           type: integer
         no_addresses:
-          format: int64
+          format: int32
           type: integer
         no_entities:
-          format: int64
+          format: int32
           type: integer
         no_txs:
-          format: int64
+          format: int32
           type: integer
         no_labels:
-          format: int64
+          format: int32
           type: integer
         timestamp:
-          format: int64
+          format: int32
           type: integer
         tools:
           type: array
@@ -882,10 +882,10 @@ components:
         height: 
           $ref: '#/components/schemas/height'
         no_txs: 
-          format: int64
+          format: int32
           type: integer
         timestamp: 
-          format: int64
+          format: int32
           type: integer
     blocks:
       type: object
@@ -923,16 +923,16 @@ components:
           $ref: '#/components/schemas/tx_summary'
         in_degree: 
           type: integer
-          format: int64
+          format: int32
         out_degree: 
           type: integer
-          format: int64
+          format: int32
         no_incoming_txs: 
           type: integer
-          format: int64
+          format: int32
         no_outgoing_txs: 
           type: integer
-          format: int64
+          format: int32
         total_received: 
           $ref: '#/components/schemas/values'
         total_spent: 
@@ -976,18 +976,18 @@ components:
           $ref: '#/components/schemas/tx_summary'
         in_degree: 
           type: integer
-          format: int64
+          format: int32
         out_degree: 
           type: integer
-          format: int64
+          format: int32
         no_addresses: 
           $ref: '#/components/schemas/no_addresses'
         no_incoming_txs: 
           type: integer
-          format: int64
+          format: int32
         no_outgoing_txs: 
           type: integer
-          format: int64
+          format: int32
         total_received: 
           $ref: '#/components/schemas/values'
         total_spent: 
@@ -1103,16 +1103,16 @@ components:
       description: Address
     entity_id:
       type: integer
-      format: int64
+      format: int32
       description: Entity id
     height:
       type: integer
-      format: int64
+      format: int32
       minimum: 0
       description: Height
     timestamp:
       type: integer
-      format: int64
+      format: int32
       description: Timestamp
     tx_type:
       type: string
@@ -1121,7 +1121,7 @@ components:
       type: string
       description: Transaction hash
     no_addresses:
-      format: int64
+      format: int32
       type: integer
       description: number of contained addresses
     neighbors:
