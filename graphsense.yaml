@@ -36,22 +36,6 @@ paths:
       summary: Returns matching addresses, transactions and labels
       tags:
       - general
-  /{currency}/blocks:
-    get:
-      operationId: list_blocks
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/page'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/blocks'
-      summary: Get all blocks
-      tags:
-      - blocks
   /{currency}/blocks/{height}:
     get:
       operationId: get_block
@@ -86,56 +70,6 @@ paths:
       summary: Get block transactions 
       tags:
       - blocks
-  /{currency}/blocks/{height}/txs.csv:
-    get:
-      operationId: list_block_txs_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/height'
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get block transactions as CSV
-      tags:
-      - blocks
-  /{currency}/addresses:
-    get:
-      operationId: list_addresses
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address_ids'
-        - $ref: '#/components/parameters/page' 
-        - $ref: '#/components/parameters/pagesize' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/addresses'
-      summary: Get addresses
-      tags:
-      - addresses
-  /{currency}/addresses.csv:
-    get:
-      operationId: list_addresses_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address_ids_required'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get addresses as CSV
-      tags:
-      - addresses
   /{currency}/addresses/{address}:
     get:
       operationId: get_address
@@ -167,24 +101,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/txs_account'
+                $ref: '#/components/schemas/address_txs'
       summary: Get all transactions an address has been involved in
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/txs.csv:
-    get:
-      operationId: list_address_txs_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get all transactions an address has been involved in as CSV
       tags:
       - addresses
   /{currency}/addresses/{address}/tags:
@@ -202,22 +120,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/address_tag'
-      summary: Get attribution tags for a given address
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/tags.csv:
-    get:
-      operationId: list_tags_by_address_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
       summary: Get attribution tags for a given address
       tags:
       - addresses
@@ -239,24 +141,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/neighbors'
       summary: Get an addresses' neighbors in the address graph
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/neighbors.csv:
-    get:
-      operationId: list_address_neighbors_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/include_labels' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get an addresses' neighbors in the address graph as CSV
       tags:
       - addresses
   /{currency}/addresses/{address}/entity:
@@ -284,39 +168,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/links'
-      summary: Get transactions between two addresses 
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/links.csv:
-    get:
-      operationId: list_address_links_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get transactions between two addresses as CSV
-      tags:
-      - addresses
-  /{currency}/entities:
-    get:
-      operationId: list_entities
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity_ids'
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -325,26 +176,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entities'
-      summary: Get entities
+                $ref: '#/components/schemas/links'
+      summary: Get outgoing transactions between two addresses 
       tags:
-      - entities
-  /{currency}/entities.csv:
-    get:
-      operationId: list_entities_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity_ids_required'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get entities as CSV
-      tags:
-      - entities
+      - addresses
   /{currency}/entities/{entity}:
     get:
       operationId: get_entity
@@ -380,23 +215,6 @@ paths:
       summary: Get tags for a given entity
       tags:
       - entities
-  /{currency}/entities/{entity}/tags.csv:
-    get:
-      operationId: list_tags_by_entity_by_level_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/tag_level' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get address or entity tags for a given entity as CSV
-      tags:
-      - entities
   /{currency}/entities/{entity}/neighbors:
     get:
       operationId: list_entity_neighbors
@@ -404,7 +222,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/entity_ids' 
+        - $ref: '#/components/parameters/only_entity_ids' 
         - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -416,24 +234,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/neighbors'
       summary: Get an entity's neighbors in the entity graph
-      tags:
-      - entities
-  /{currency}/entities/{entity}/neighbors.csv:
-    get:
-      operationId: list_entity_neighbors_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/include_labels' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get an entity's neighbors in the entity graph as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/txs:
@@ -450,24 +250,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/txs_account'
+                $ref: '#/components/schemas/address_txs'
       summary: Get all transactions an entity has been involved in
-      tags:
-      - entities
-  /{currency}/entities/{entity}/txs.csv:
-    get:
-      operationId: list_entity_txs_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get all transactions an entity has been involved in as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/links:
@@ -477,6 +261,8 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/entity_neighbor' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
@@ -485,23 +271,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/links'
       summary: Get transactions between two entities
-      tags:
-      - entities
-  /{currency}/entities/{entity}/links.csv:
-    get:
-      operationId: list_entity_links_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/entity_neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get transactions between two entities as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/addresses:
@@ -520,22 +289,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/entity_addresses'
       summary: Get an entity's addresses 
-      tags:
-      - entities
-  /{currency}/entities/{entity}/addresses.csv:
-    get:
-      operationId: list_entity_addresses_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get an entity's addresses as CSV
       tags:
       - entities
   /{currency}/entities/{entity}/search:
@@ -568,6 +321,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/tx_hash' 
+        - $ref: '#/components/parameters/include_io' 
       responses:
         "200":
           description: OK
@@ -578,20 +332,21 @@ paths:
       summary: Returns details of a specific transaction identified by its hash.
       tags:
         - txs
-  /{currency}/txs:
+  /{currency}/txs/{tx_hash}/{io}:
     get:
-      operationId: list_txs
+      operationId: get_tx_io
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/tx_hash' 
+        - $ref: '#/components/parameters/io'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/txs'
-      summary: Returns transactions
+                $ref: '#/components/schemas/tx_values'
+      summary: Returns input/output values of a specific transaction identified by its hash.
       tags:
         - txs
   /{currency}/rates/{height}:
@@ -660,6 +415,38 @@ paths:
       summary: Returns the supported concepts of a taxonomy
       tags:
         - tags
+  /{currency}/bulk/{api}/{operation}:
+    post:
+      operationId: bulk
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/api' 
+        - $ref: '#/components/parameters/operation' 
+        - $ref: '#/components/parameters/form' 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+        description: Map of the operation's parameter names to (arrays of) values
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+            application/json: 
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+      summary: Get data as CSV or JSON in bulk
+      tags:
+      - bulk
+      x-streamed: true
 components:
   parameters:
     currency:
@@ -685,8 +472,7 @@ components:
       name: height
       required: true
       schema:
-        type: integer
-        minimum: 0
+        $ref: '#/components/schemas/height'
       description: The block height
       example: 1
     page:
@@ -714,30 +500,29 @@ components:
         enum: [in, out]
       description: Incoming or outgoing neighbors
       example: out
+    io:
+      in: path
+      name: io
+      required: true
+      schema:
+        type: string
+        enum: [inputs, outputs]
+      description: Input or outpus values of a transaction
+      example: outputs
     address:
       in: path
       name: address
       required: true
       schema:
-        type: string
-        format: string
+        $ref: '#/components/schemas/address_id'
       description: The cryptocurrency address
       example: 'addressA'
-    hex_address:
-      in: path
-      name: address
-      required: true
-      schema:
-        type: string
-        format: string
-      description: The cryptocurrency address in hexadecimal representation
-      example: '123456'
     neighbor:
       in: query
       name: neighbor
       required: true
       schema:
-        type: string
+        $ref: '#/components/schemas/address_id'
       description: Neighbor address
       example: 'addressE'
     entity_neighbor:
@@ -745,25 +530,15 @@ components:
       name: neighbor
       required: true
       schema:
-        type: integer
-        format: int32
+        $ref: '#/components/schemas/entity_id'
       description: Neighbor entity
       example: 123456
-    hex_neighbor:
-      in: query
-      name: neighbor
-      required: true
-      schema:
-        type: string
-      description: Neighbor address in hexadecimal representation
-      example: '123456'
     entity:
       in: path
       name: entity
       required: true
       schema:
-        type: integer
-        format: int64
+        $ref: '#/components/schemas/entity_id'
       description: The entity ID
       example: 67065
     tx_hash:
@@ -771,7 +546,7 @@ components:
       name: tx_hash
       required: true
       schema:
-        type: string
+        $ref: '#/components/schemas/tx_hash'
       description: The transaction hash
       example: ab188013
     address_ids:
@@ -783,37 +558,13 @@ components:
         items:
           type: string
       description: Restrict result to given set of comma separated addresses
-    entity_ids:
+    only_entity_ids:
       in: query
-      name: ids
+      name: only_ids
       required: false
       schema:
-        type: array
-        items:
-          type: integer
-          format: int32
+        $ref: '#/components/schemas/only_entity_ids'
       description: Restrict result to given set of comma separated IDs
-    address_ids_required:
-      in: query
-      name: ids
-      required: true
-      schema:
-        type: array
-        items:
-          type: string
-      description: Set of comma separated IDs
-      x-graphsense-rest-test-example: '"1,2"'
-    entity_ids_required:
-      in: query
-      name: ids
-      required: true
-      schema:
-        type: array
-        items:
-          type: integer
-          format: int32
-      description: Set of comma separated IDs
-      x-graphsense-rest-test-example: '"1,2"'
     include_tags:
       in: query
       name: include_tags
@@ -821,7 +572,7 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether tags should be included 
+      description: Whether to include tags 
     include_labels:
       in: query
       name: include_labels
@@ -829,7 +580,15 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether labels of tags should be included
+      description: Whether to include labels of tags 
+    include_io:
+      in: query
+      name: include_io
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to include inputs/outputs of a transaction (UTXO only)
     tag_coherence:
       in: query
       name: tag_coherence
@@ -943,6 +702,58 @@ components:
         type: integer
       description: Maximum number of search results
       example: 10
+    api:
+      in: path
+      name: api
+      required: true
+      schema:
+        type: string
+        enum:
+          - blocks
+          - addresses
+          - entities
+          - txs
+          - rates
+          - tags
+      description: The api of the operation to execute in bulk
+      example: blocks
+    operation:
+      in: path
+      name: operation
+      required: true
+      schema:
+        type: string
+        enum:
+          - get_block
+          - list_block_txs
+          - get_address
+          - list_address_txs
+          - list_tags_by_address
+          - list_address_neighbors
+          - get_address_entity
+          - list_address_links
+          - get_entity
+          - list_tags_by_entity
+          - list_entity_neighbors
+          - list_entity_txs
+          - list_entity_links
+          - list_entity_addresses
+          - get_tx
+          - get_tx_io
+          - get_exchange_rates
+      description: The operation to execute in bulk
+      example: get_block
+    form:
+      in: query
+      name: form
+      required: false
+      schema:
+        type: string
+        enum: 
+          - csv
+          - json
+        default: csv
+      description: The response data format
   schemas:
     stats:
       type: object
@@ -1297,7 +1108,7 @@ components:
     height:
       type: integer
       format: int64
-      minimum: 1
+      minimum: 0
       description: Height
     timestamp:
       type: integer
@@ -1482,8 +1293,6 @@ components:
         - tx_hash
         - coinbase
         - height
-        - inputs
-        - outputs
         - timestamp
         - total_input
         - total_output
@@ -1534,15 +1343,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/tx'
-    txs_account:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/tx_account'
     tx_account:
       type: object
       required:
@@ -1551,6 +1351,8 @@ components:
         - height
         - timestamp
         - value
+        - from_address
+        - to_address
       properties:
         tx_type:
           type: string
@@ -1563,6 +1365,48 @@ components:
           $ref: '#/components/schemas/timestamp'
         value:
           $ref: '#/components/schemas/values'
+        from_address:
+          $ref: '#/components/schemas/address_id'
+        to_address:
+          $ref: '#/components/schemas/address_id'
+    address_txs:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        address_txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/address_tx'
+    address_tx_utxo:
+      type: object
+      required:
+        - tx_type
+        - tx_hash
+        - height
+        - timestamp
+        - value
+      properties:
+        tx_type:
+          type: string
+          default: 'utxo'
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+        height:
+          $ref: '#/components/schemas/height'
+        timestamp: 
+          $ref: '#/components/schemas/timestamp'
+        value:
+          $ref: '#/components/schemas/values'
+    address_tx:
+      oneOf:
+        - $ref: '#/components/schemas/address_tx_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'tx_type'
+        mapping:
+          utxo: '#/components/schemas/address_tx_utxo'
+          account: '#/components/schemas/tx_account'
     tx:
       oneOf:
         - $ref: '#/components/schemas/tx_utxo'
@@ -1661,3 +1505,8 @@ components:
       description: The list of matching labels
       items:
         type: string
+    only_entity_ids:
+      type: array
+      items:
+        type: integer
+        format: int32
