@@ -415,15 +415,14 @@ paths:
       summary: Returns the supported concepts of a taxonomy
       tags:
         - tags
-  /{currency}/bulk/{api}/{operation}:
-    post:
-      operationId: bulk
-      parameters:
+  /{currency}/bulk.csv/{api}/{operation}:
+    post: 
+      operationId: bulk_csv
+      parameters: 
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/api' 
         - $ref: '#/components/parameters/operation' 
-        - $ref: '#/components/parameters/form' 
-      requestBody:
+      requestBody: 
         required: true
         content:
           application/json:
@@ -437,13 +436,35 @@ paths:
             text/csv: 
               schema:
                 type: string
+      summary: Get data as CSV in bulk
+      tags:
+      - bulk
+      x-streamed: true
+  /{currency}/bulk.json/{api}/{operation}:
+    post:
+      operationId: bulk_json
+      parameters: 
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/api' 
+        - $ref: '#/components/parameters/operation' 
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+        description: Map of the operation's parameter names to (arrays of) values
+      responses:
+        "200":
+          description: OK
+          content:
             application/json: 
               schema:
                 type: array
                 items:
                   type: object
                   additionalProperties: true
-      summary: Get data as CSV or JSON in bulk
+      summary: Get data as JSON in bulk
       tags:
       - bulk
       x-streamed: true
