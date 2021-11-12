@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: GraphSense API
   title: GraphSense API
-  version: "0.5"
+  version: "0.5.1-dev"
 servers:
   - url: 'https://api.graphsense.info'
 paths:
@@ -309,9 +309,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/search_result_level1'
+                $ref: '#/components/schemas/search_result_level1'
       summary: Search deeply for matching neighbors
       tags:
       - entities
@@ -377,9 +375,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/tags'
+                $ref: '#/components/schemas/tags'
       summary: Returns address and entity tags associated with a given label
       tags:
         - tags
@@ -428,6 +424,8 @@ paths:
           application/json:
             schema:
               type: object
+            example:
+              height: [1,2,3]
         description: Map of the operation's parameter names to (arrays of) values
       responses:
         "200":
@@ -1141,6 +1139,9 @@ components:
     tx_hash:
       type: string
       description: Transaction hash
+    coinbase:
+      type: boolean
+      description: Coinbase transaction flag
     no_addresses:
       format: int32
       type: integer
@@ -1324,8 +1325,7 @@ components:
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         coinbase:
-          type: boolean
-          description: Coinbase transaction flag
+          $ref: '#/components/schemas/coinbase'
         height:
           $ref: '#/components/schemas/height'
         inputs:
@@ -1404,6 +1404,7 @@ components:
       required:
         - tx_type
         - tx_hash
+        - coinbase
         - height
         - timestamp
         - value
@@ -1413,6 +1414,8 @@ components:
           default: 'utxo'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
+        coinbase:
+          $ref: '#/components/schemas/coinbase'
         height:
           $ref: '#/components/schemas/height'
         timestamp: 
