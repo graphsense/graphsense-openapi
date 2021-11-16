@@ -832,6 +832,8 @@ components:
             $ref: '#/components/schemas/currency_stats'
         version:
           type: string
+        request_timestamp:
+          type: string
     currency_stats:
       title: statistics of a cryptocurrency
       type: object
