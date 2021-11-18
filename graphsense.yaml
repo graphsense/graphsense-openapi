@@ -462,6 +462,7 @@ paths:
       parameters: 
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/operation' 
+        - $ref: '#/components/parameters/num_pages' 
       requestBody: 
         required: true
         content:
@@ -488,6 +489,7 @@ paths:
       parameters: 
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/operation' 
+        - $ref: '#/components/parameters/num_pages' 
       requestBody: 
         required: true
         content:
@@ -790,17 +792,14 @@ components:
           - get_exchange_rates
       description: The operation to execute in bulk
       example: get_block
-    form:
+    num_pages:
       in: query
-      name: form
-      required: false
+      name: num_pages
+      required: true
       schema:
-        type: string
-        enum: 
-          - csv
-          - json
-        default: csv
-      description: The response data format
+        type: integer
+      description: Number of pages to retrieve for operations with list response
+      example: 1
   schemas:
     currency:
       type: string
