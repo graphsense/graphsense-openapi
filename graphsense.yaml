@@ -456,12 +456,11 @@ paths:
       summary: Returns the supported concepts of a taxonomy
       tags:
         - tags
-  /{currency}/bulk.csv/{api}/{operation}:
+  /{currency}/bulk.csv/{operation}:
     post: 
       operationId: bulk_csv
       parameters: 
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/api' 
         - $ref: '#/components/parameters/operation' 
       requestBody: 
         required: true
@@ -483,12 +482,11 @@ paths:
       tags:
       - bulk
       x-streamed: true
-  /{currency}/bulk.json/{api}/{operation}:
+  /{currency}/bulk.json/{operation}:
     post:
       operationId: bulk_json
       parameters: 
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/api' 
         - $ref: '#/components/parameters/operation' 
       requestBody: 
         required: true
@@ -766,21 +764,6 @@ components:
         type: integer
       description: Maximum number of search results
       example: 10
-    api:
-      in: path
-      name: api
-      required: true
-      schema:
-        type: string
-        enum:
-          - blocks
-          - addresses
-          - entities
-          - txs
-          - rates
-          - tags
-      description: The api of the operation to execute in bulk
-      example: blocks
     operation:
       in: path
       name: operation
