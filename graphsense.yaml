@@ -764,6 +764,8 @@ components:
       required: false
       schema:
         type: integer
+        default: 10
+        maximum: 100
       description: Maximum number of search results
       example: 10
     operation:
