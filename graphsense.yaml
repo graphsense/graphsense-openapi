@@ -151,15 +151,15 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/address_tag'
+                $ref: '#/components/schemas/address_tags'
       summary: Get attribution tags for a given address
       tags:
       - addresses
@@ -190,7 +190,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/include_tags'
-        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -227,7 +226,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/include_tags'
-        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -244,7 +242,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/tag_coherence'
+        - $ref: '#/components/parameters/tag_level' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
@@ -252,7 +252,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/tags'
-      summary: Get tags for a given entity
+      summary: Get tags for a given entity for the given level
       tags:
       - entities
   /{currency}/entities/{entity}/neighbors:
@@ -408,12 +408,15 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
-  /tags:
+  /{currency}/tags:
     get:
       operationId: list_tags
       parameters:
-        - $ref: '#/components/parameters/currency_query' 
+        - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/label' 
+        - $ref: '#/components/parameters/tag_level' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
@@ -421,7 +424,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/tags'
-      summary: Returns address and entity tags associated with a given label
+      summary: Returns address or entity tags associated with a given label
       tags:
         - tags
   /tags/taxonomies:
@@ -636,7 +639,7 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether to include tags 
+      description: Whether to include the first page of tags. Use the respective /tags endpoint to retrieve more if needed.
     include_labels:
       in: query
       name: include_labels
@@ -644,7 +647,7 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether to include labels of tags 
+      description: Whether to include labels of first page of tags 
     include_io:
       in: query
       name: include_io
@@ -653,14 +656,6 @@ components:
         type: boolean
         default: false
       description: Whether to include inputs/outputs of a transaction (UTXO only)
-    tag_coherence:
-      in: query
-      name: tag_coherence
-      required: false
-      schema:
-        type: boolean
-        default: false
-      description: Whether to calculate coherence of address tags
     tag_level:
       in: query
       name: level
@@ -907,7 +902,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/address_tag'
-          description: Tags
+          description: First page of tags of this address
     entity:
       type: object
       required:
@@ -950,28 +945,49 @@ components:
         total_spent: 
           $ref: '#/components/schemas/values'
         tags:
-          $ref: '#/components/schemas/tags'
+          $ref: '#/components/schemas/address_and_entity_tags'
     tags:
+      oneOf:
+        - $ref: '#/components/schemas/entity_tags'
+        - $ref: '#/components/schemas/address_tags'
+    address_and_entity_tags:
       type: object
       required:
-        - address_tags
         - entity_tags
+        - address_tags
       properties:
-        address_tags: 
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tag'
-          description: Aggregated tags of contained addresses
         entity_tags: 
           type: array
           items:
             $ref: '#/components/schemas/entity_tag'
-          description: Tags of this entity
-        tag_coherence:
-          type: number
-          format: float
-          description: Tag coherence
-          example: 0.67
+          description: First page of entity tags of this entity
+        address_tags: 
+          type: array
+          items:
+            $ref: '#/components/schemas/address_tag'
+          description: First page of address tags of this entity
+    entity_tags: 
+      type: object
+      required:
+        - entity_tags
+      properties:
+        entity_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/entity_tag'
+        next_page:
+          $ref: '#/components/schemas/next_page'
+    address_tags: 
+      type: object
+      required:
+        - address_tags
+      properties:
+        address_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/address_tag'
+        next_page:
+          $ref: '#/components/schemas/next_page'
     tx_summary:
       type: object
       required:
