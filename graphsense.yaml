@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: GraphSense API
   title: GraphSense API
-  version: 0.5
+  version: "0.5.1"
 servers:
   - url: 'https://api.graphsense.info'
 paths:
@@ -33,25 +33,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/search_result'
+              examples:
+                search_result_1Archive:
+                  summary: search result for '1Archive'
+                  value:
+                    currencies: 
+                        addresses: 
+                          - 1Archive1n2C579dMsAu3iC6tWzuQJz8dN
+                          - 1ArchiveisY6i4Hpostivemate1sVRhQ71
+                          - 1ArchiveiskxdThieferHRHi1592TqsV4c
+                        currency: btc
+                        txs: []
+                    labels: []
+                search_result_04d9200:
+                  summary: search result for '04d9200'
+                  value:
+                    currencies: 
+                        addresses: []
+                        currency: btc
+                        txs: 
+                          - 04d920038d78be339694fe28116789dc49509cc9f47724d4ebcf574261caee8c,
+                          - 04d920094700443cab848544411a9a6d6628ab0d8502a796fbc70989b7991ccf
+                    labels: []
+                search_result_internet:
+                  summary: search result for 'internet'
+                  value:
+                    currencies: 
+                        addresses: []
+                        currency: btc
+                        txs: []
+                    labels: 
+                      - Internet Archive
       summary: Returns matching addresses, transactions and labels
       tags:
       - general
-  /{currency}/blocks:
-    get:
-      operationId: list_blocks
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/page'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/blocks'
-      summary: Get all blocks
-      tags:
-      - blocks
   /{currency}/blocks/{height}:
     get:
       operationId: get_block
@@ -82,60 +97,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/block_tx'
-      summary: Get block transactions (100 per page)
+                  $ref: '#/components/schemas/tx'
+              examples:
+                tx_utxo_array:
+                  summary: list of UTXO transactions
+                  value:
+                    - $ref: '#/components/examples/tx_utxo/value'
+                tx_account_array:
+                  summary: list of account transactions
+                  value:
+                    - $ref: '#/components/examples/tx_account/value'
+      summary: Get block transactions 
       tags:
       - blocks
-  /{currency}/blocks/{height}/txs.csv:
-    get:
-      operationId: list_block_txs_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/height'
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get block transactions as CSV
-      tags:
-      - blocks
-  /{currency}/addresses:
-    get:
-      operationId: list_addresses
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
-        - $ref: '#/components/parameters/page' 
-        - $ref: '#/components/parameters/pagesize' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/addresses'
-      summary: Get addresses
-      tags:
-      - addresses
-  /{currency}/addresses.csv:
-    get:
-      operationId: list_addresses_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids_required'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get addresses as CSV
-      tags:
-      - addresses
   /{currency}/addresses/{address}:
     get:
       operationId: get_address
@@ -171,53 +145,21 @@ paths:
       summary: Get all transactions an address has been involved in
       tags:
       - addresses
-  /{currency}/addresses/{address}/txs.csv:
-    get:
-      operationId: list_address_txs_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv: 
-              schema:
-                type: string
-      summary: Get all transactions an address has been involved in as CSV
-      tags:
-      - addresses
   /{currency}/addresses/{address}/tags:
     get:
       operationId: list_tags_by_address
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/address_tag'
-      summary: Get attribution tags for a given address
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/tags.csv:
-    get:
-      operationId: list_tags_by_address_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
+                $ref: '#/components/schemas/address_tags'
       summary: Get attribution tags for a given address
       tags:
       - addresses
@@ -241,23 +183,6 @@ paths:
       summary: Get an addresses' neighbors in the address graph
       tags:
       - addresses
-  /{currency}/addresses/{address}/neighbors.csv:
-    get:
-      operationId: list_address_neighbors_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/direction' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get an addresses' neighbors in the address graph as CSV
-      tags:
-      - addresses
   /{currency}/addresses/{address}/entity:
     get:
       operationId: get_address_entity
@@ -265,7 +190,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/include_tags'
-        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -283,41 +207,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/link'
-      summary: Get transactions between two addresses 
-      tags:
-      - addresses
-  /{currency}/addresses/{address}/links.csv:
-    get:
-      operationId: list_address_links_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/neighbor' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get transactions between two addresses as CSV
-      tags:
-      - addresses
-  /{currency}/entities:
-    get:
-      operationId: list_entities
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids'
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -326,26 +215,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entities'
-      summary: Get entities
+                $ref: '#/components/schemas/links'
+      summary: Get outgoing transactions between two addresses 
       tags:
-      - entities
-  /{currency}/entities.csv:
-    get:
-      operationId: list_entities_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/ids_required'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get entities as CSV
-      tags:
-      - entities
+      - addresses
   /{currency}/entities/{entity}:
     get:
       operationId: get_entity
@@ -353,7 +226,6 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/include_tags'
-        - $ref: '#/components/parameters/tag_coherence'
       responses:
         "200":
           description: OK
@@ -370,7 +242,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/tag_coherence'
+        - $ref: '#/components/parameters/tag_level' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
@@ -378,24 +252,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/tags'
-      summary: Get tags for a given entity
-      tags:
-      - entities
-  /{currency}/entities/{entity}/tags.csv:
-    get:
-      operationId: list_tags_by_entity_by_level_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/tag_level' 
-      responses:
-        "200":
-          description: OK
-          content:
-            application/csv:
-              schema:
-                type: string
-      summary: Get address or entity tags for a given entity as CSV
+      summary: Get tags for a given entity for the given level
       tags:
       - entities
   /{currency}/entities/{entity}/neighbors:
@@ -405,7 +262,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction' 
-        - $ref: '#/components/parameters/ids' 
+        - $ref: '#/components/parameters/only_entity_ids' 
         - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -419,21 +276,41 @@ paths:
       summary: Get an entity's neighbors in the entity graph
       tags:
       - entities
-  /{currency}/entities/{entity}/neighbors.csv:
+  /{currency}/entities/{entity}/txs:
     get:
-      operationId: list_entity_neighbors_csv
+      operationId: list_entity_txs
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
           content:
-            text/csv:
+            application/json:
               schema:
-                type: string
-      summary: Get an entity's neighbors in the entity graph as CSV
+                $ref: '#/components/schemas/address_txs'
+      summary: Get all transactions an entity has been involved in
+      tags:
+      - entities
+  /{currency}/entities/{entity}/links:
+    get:
+      operationId: list_entity_links
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/entity_neighbor' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/links'
+      summary: Get transactions between two entities
       tags:
       - entities
   /{currency}/entities/{entity}/addresses:
@@ -454,22 +331,6 @@ paths:
       summary: Get an entity's addresses 
       tags:
       - entities
-  /{currency}/entities/{entity}/addresses.csv:
-    get:
-      operationId: list_entity_addresses_csv
-      parameters:
-        - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/entity' 
-      responses:
-        "200":
-          description: OK
-          content:
-            text/csv:
-              schema:
-                type: string
-      summary: Get an entity's addresses as CSV
-      tags:
-      - entities
   /{currency}/entities/{entity}/search:
     get:
       operationId: search_entity_neighbors
@@ -488,9 +349,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/search_result_level1'
+                $ref: '#/components/schemas/search_result_level1'
       summary: Search deeply for matching neighbors
       tags:
       - entities
@@ -500,6 +359,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/tx_hash' 
+        - $ref: '#/components/parameters/include_io' 
       responses:
         "200":
           description: OK
@@ -507,23 +367,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/tx'
+              examples:
+                tx_utxo:
+                  $ref: '#/components/examples/tx_utxo'
+                tx_account:
+                  $ref: '#/components/examples/tx_account'
       summary: Returns details of a specific transaction identified by its hash.
       tags:
         - txs
-  /{currency}/txs:
+  /{currency}/txs/{tx_hash}/{io}:
     get:
-      operationId: list_txs
+      operationId: get_tx_io
       parameters:
         - $ref: '#/components/parameters/currency' 
-        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/tx_hash' 
+        - $ref: '#/components/parameters/io'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/txs'
-      summary: Returns transactions
+                $ref: '#/components/schemas/tx_values'
+      summary: Returns input/output values of a specific transaction identified by its hash.
       tags:
         - txs
   /{currency}/rates/{height}:
@@ -542,22 +408,23 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
-  /tags:
+  /{currency}/tags:
     get:
       operationId: list_tags
       parameters:
-        - $ref: '#/components/parameters/currency_query' 
+        - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/label' 
+        - $ref: '#/components/parameters/tag_level' 
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/tags'
-      summary: Returns address and entity tags associated with a given label
+                $ref: '#/components/schemas/tags'
+      summary: Returns address or entity tags associated with a given label
       tags:
         - tags
   /tags/taxonomies:
@@ -592,6 +459,61 @@ paths:
       summary: Returns the supported concepts of a taxonomy
       tags:
         - tags
+  /{currency}/bulk.csv/{operation}:
+    post: 
+      operationId: bulk_csv
+      parameters: 
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/operation' 
+        - $ref: '#/components/parameters/num_pages' 
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              height: [1,2,3]
+        description: Map of the operation's parameter names to (arrays of) values
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv: 
+              schema:
+                type: string
+      summary: Get data as CSV in bulk
+      tags:
+      - bulk
+      x-streamed: true
+  /{currency}/bulk.json/{operation}:
+    post:
+      operationId: bulk_json
+      parameters: 
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/operation' 
+        - $ref: '#/components/parameters/num_pages' 
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+        description: Map of the operation's parameter names to (arrays of) values
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: 
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+      summary: Get data as JSON in bulk
+      tags:
+      - bulk
+      x-streamed: true
 components:
   parameters:
     currency:
@@ -601,7 +523,7 @@ components:
       schema:
         type: string
         format: string
-      description: The cryptocurrency (e.g., btc)
+      description: The cryptocurrency code (e.g., btc)
       example: 'btc'
     currency_query:
       in: query
@@ -617,8 +539,7 @@ components:
       name: height
       required: true
       schema:
-        type: integer
-        minimum: 1
+        $ref: '#/components/schemas/height'
       description: The block height
       example: 1
     page:
@@ -646,47 +567,45 @@ components:
         enum: [in, out]
       description: Incoming or outgoing neighbors
       example: out
+    io:
+      in: path
+      name: io
+      required: true
+      schema:
+        type: string
+        enum: [inputs, outputs]
+      description: Input or outpus values of a transaction
+      example: outputs
     address:
       in: path
       name: address
       required: true
       schema:
-        type: string
-        format: string
+        $ref: '#/components/schemas/address_id'
       description: The cryptocurrency address
-      example: '1Archive1n2C579dMsAu3iC6tWzuQJz8dN'
-    hex_address:
-      in: path
-      name: address
-      required: true
-      schema:
-        type: string
-        format: string
-      description: The cryptocurrency address in hexadecimal representation
-      example: '123456'
+      example: 'addressA'
     neighbor:
       in: query
       name: neighbor
       required: true
       schema:
-        type: string
+        $ref: '#/components/schemas/address_id'
       description: Neighbor address
-      example: '17DfZja1713S3JRWA9jaebCKFM5anUh7GG'
-    hex_neighbor:
+      example: 'addressE'
+    entity_neighbor:
       in: query
       name: neighbor
       required: true
       schema:
-        type: string
-      description: Neighbor address in hexadecimal representation
-      example: '123456'
+        $ref: '#/components/schemas/entity_id'
+      description: Neighbor entity
+      example: 123456
     entity:
       in: path
       name: entity
       required: true
       schema:
-        type: integer
-        format: int64
+        $ref: '#/components/schemas/entity_id'
       description: The entity ID
       example: 67065
     tx_hash:
@@ -694,10 +613,10 @@ components:
       name: tx_hash
       required: true
       schema:
-        type: string
+        $ref: '#/components/schemas/tx_hash'
       description: The transaction hash
       example: ab188013
-    ids:
+    address_ids:
       in: query
       name: ids
       required: false
@@ -705,17 +624,14 @@ components:
         type: array
         items:
           type: string
-      description: Restrict result to given set of comma separated IDs
-    ids_required:
+      description: Restrict result to given set of comma separated addresses
+    only_entity_ids:
       in: query
-      name: ids
-      required: true
+      name: only_ids
+      required: false
       schema:
-        type: array
-        items:
-          type: string
-      description: Set of comma separated IDs
-      x-graphsense-rest-test-example: '"1,2"'
+        $ref: '#/components/schemas/only_entity_ids'
+      description: Restrict result to given set of comma separated IDs
     include_tags:
       in: query
       name: include_tags
@@ -723,7 +639,7 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether tags should be included 
+      description: Whether to include the first page of tags. Use the respective /tags endpoint to retrieve more if needed.
     include_labels:
       in: query
       name: include_labels
@@ -731,15 +647,15 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether labels of tags should be included
-    tag_coherence:
+      description: Whether to include labels of first page of tags 
+    include_io:
       in: query
-      name: tag_coherence
+      name: include_io
       required: false
       schema:
         type: boolean
         default: false
-      description: Whether to calculate coherence of address tags
+      description: Whether to include inputs/outputs of a transaction (UTXO only)
     tag_level:
       in: query
       name: level
@@ -778,7 +694,7 @@ components:
           - category: comma separated list of category names
           - addresses: comma separated list of address IDs
           - entities: comma separated list of entity IDs
-          - total_received/balance: comma separated tuple of (currency, min, max)"
+          - total_received/balance: comma separated tuple of (currency, min, max) where currency is 'value' for the cryptocurrency value or an ISO currency code"
       schema:
         type: array
         items:
@@ -843,9 +759,49 @@ components:
       required: false
       schema:
         type: integer
+        default: 10
+        maximum: 100
       description: Maximum number of search results
       example: 10
+    operation:
+      in: path
+      name: operation
+      required: true
+      schema:
+        type: string
+        enum:
+          - get_block
+          - list_block_txs
+          - get_address
+          - list_address_txs
+          - list_tags_by_address
+          - list_address_neighbors
+          - get_address_entity
+          - list_address_links
+          - get_entity
+          - list_tags_by_entity
+          - list_entity_neighbors
+          - list_entity_txs
+          - list_entity_links
+          - list_entity_addresses
+          - get_tx
+          - get_tx_io
+          - get_exchange_rates
+      description: The operation to execute in bulk
+      example: get_block
+    num_pages:
+      in: query
+      name: num_pages
+      required: true
+      schema:
+        type: integer
+      description: Number of pages to retrieve for operations with list response
+      example: 1
   schemas:
+    currency:
+      type: string
+      description: crypto currency code 
+      example: btc
     stats:
       type: object
       properties:
@@ -854,58 +810,8 @@ components:
           items:
             $ref: '#/components/schemas/currency_stats'
         version:
-          $ref: '#/components/schemas/stats_version'
-        tools:
-          type: array
-          items:
-            $ref: '#/components/schemas/stats_tool'
-        tags_source:
-          $ref: '#/components/schemas/stats_tags_source'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/stats_note'
-    stats_version:
-      type: object
-      properties:
-        nr: 
           type: string
-        hash:
-          type: string
-        timestamp:
-          type: string
-        file: 
-          type: string
-    stats_tool:
-      type: object
-      properties:
-        visible_name:
-          type: string
-        id:
-          type: string
-        version:
-          type: string
-        titanium_replayable:
-          type: boolean
-        responsible_for:
-          type: array
-          items:
-            type: string
-    stats_tags_source:
-      type: object
-      properties:
-        visible_name: 
-          type: string
-        id:
-          type: string
-        version:
-          type: string
-        report_uuid:
-          type: string
-    stats_note:
-      type: object
-      properties:
-        note:
+        request_timestamp:
           type: string
     currency_stats:
       title: statistics of a cryptocurrency
@@ -914,56 +820,29 @@ components:
         name:
           type: string
         no_blocks:
-          format: int64
+          format: int32
           type: integer
+          example: 12345
         no_address_relations:
-          format: int64
+          format: int32
           type: integer
+          example: 1234567
         no_addresses:
-          format: int64
+          format: int32
           type: integer
+          example: 12345
         no_entities:
-          format: int64
+          format: int32
           type: integer
+          example: 123
         no_txs:
-          format: int64
-          type: integer
+          $ref: '#/components/schemas/no_txs'
         no_labels:
-          format: int64
+          format: int32
           type: integer
+          example: 123
         timestamp:
-          format: int64
-          type: integer
-        tools:
-          type: array
-          items:
-            type: string
-        notes:
-          type: array
-          items:
-            type: string
-        data_sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/stats_ledger'
-    stats_ledger:
-      type: object
-      properties:
-        visible_name:
-          type: string
-        id:
-          type: string
-        version:
-          $ref: '#/components/schemas/stats_ledger_version'
-        report_uuid:
-          type: string
-    stats_ledger_version:
-      type: object
-      properties:
-        nr:
-          type: string
-        timestamp:
-          type: string
+          $ref: '#/components/schemas/timestamp'
     block:
       type: object
       properties:
@@ -973,58 +852,16 @@ components:
         height: 
           $ref: '#/components/schemas/height'
         no_txs: 
-          format: int64
+          format: int32
           type: integer
+          example: 11
         timestamp: 
-          format: int64
-          type: integer
-    block_tx:
-      oneOf:
-        - $ref: '#/components/schemas/block_tx_utxo'
-        - $ref: '#/components/schemas/tx_account'
-      discriminator: 
-        propertyName: 'currency_type'
-        mapping:
-          utxo: '#/components/schemas/block_tx_utxo'
-          account: '#/components/schemas/tx_account'
-    block_tx_utxo:
-      type: object
-      required:
-        - currency_type
-        - tx_hash
-        - no_inputs
-        - no_outputs
-        - total_input
-        - total_output
-      properties:
-        currency_type:
-          type: string
-          default: 'utxo'
-        tx_hash: 
-          type: string
-        no_inputs: 
-          type: integer
-          format: int64
-        no_outputs:
-          type: integer
-          format: int64
-        total_input:
-          $ref: '#/components/schemas/values'
-        total_output:
-          $ref: '#/components/schemas/values'
-    blocks:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        blocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/block'
+          $ref: '#/components/schemas/timestamp'
     address:
       type: object
       required:
         - address
+        - entity
         - balance
         - first_tx
         - last_tx
@@ -1037,6 +874,8 @@ components:
       properties:
         address: 
           $ref: '#/components/schemas/address_id'
+        entity: 
+          $ref: '#/components/schemas/entity_id'
         balance: 
           $ref: '#/components/schemas/values'
         first_tx: 
@@ -1045,16 +884,16 @@ components:
           $ref: '#/components/schemas/tx_summary'
         in_degree: 
           type: integer
-          format: int64
+          format: int32
         out_degree: 
           type: integer
-          format: int64
+          format: int32
         no_incoming_txs: 
           type: integer
-          format: int64
+          format: int32
         no_outgoing_txs: 
           type: integer
-          format: int64
+          format: int32
         total_received: 
           $ref: '#/components/schemas/values'
         total_spent: 
@@ -1063,16 +902,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/address_tag'
-          description: Tags
-    addresses:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/address'
+          description: First page of tags of this address
     entity:
       type: object
       required:
@@ -1098,91 +928,66 @@ components:
           $ref: '#/components/schemas/tx_summary'
         in_degree: 
           type: integer
-          format: int64
+          format: int32
         out_degree: 
           type: integer
-          format: int64
+          format: int32
         no_addresses: 
           $ref: '#/components/schemas/no_addresses'
         no_incoming_txs: 
           type: integer
-          format: int64
+          format: int32
         no_outgoing_txs: 
           type: integer
-          format: int64
+          format: int32
         total_received: 
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
         tags:
-          $ref: '#/components/schemas/tags'
+          $ref: '#/components/schemas/address_and_entity_tags'
     tags:
+      oneOf:
+        - $ref: '#/components/schemas/entity_tags'
+        - $ref: '#/components/schemas/address_tags'
+    address_and_entity_tags:
       type: object
       required:
-        - address_tags
         - entity_tags
+        - address_tags
       properties:
-        address_tags: 
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tag'
-          description: Aggregated tags of contained addresses
         entity_tags: 
           type: array
           items:
             $ref: '#/components/schemas/entity_tag'
-          description: Tags of this entity
-        tag_coherence:
-          type: number
-          format: float
-          description: Tag coherence
-    entities:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        entities:
+          description: First page of entity tags of this entity
+        address_tags: 
           type: array
           items:
-            $ref: '#/components/schemas/entity'
-    address_txs:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        address_txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tx'
-    address_tx:
-      oneOf:
-        - $ref: '#/components/schemas/address_tx_utxo'
-        - $ref: '#/components/schemas/tx_account'
-      discriminator: 
-        propertyName: 'currency_type'
-        mapping:
-          utxo: '#/components/schemas/address_tx_utxo'
-          account: '#/components/schemas/tx_account'
-    address_tx_utxo:
+            $ref: '#/components/schemas/address_tag'
+          description: First page of address tags of this entity
+    entity_tags: 
       type: object
       required:
-        - currency_type
-        - height
-        - timestamp
-        - tx_hash
-        - value
+        - entity_tags
       properties:
-        currency_type:
-          type: string
-          default: 'utxo'
-        height:
-          $ref: '#/components/schemas/height'
-        timestamp:
-          $ref: '#/components/schemas/timestamp'
-        tx_hash:
-          $ref: '#/components/schemas/tx_hash'
-        value: 
-          $ref: '#/components/schemas/values'
+        entity_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/entity_tag'
+        next_page:
+          $ref: '#/components/schemas/next_page'
+    address_tags: 
+      type: object
+      required:
+        - address_tags
+      properties:
+        address_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/address_tag'
+        next_page:
+          $ref: '#/components/schemas/next_page'
     tx_summary:
       type: object
       required:
@@ -1196,6 +1001,42 @@ components:
           $ref: '#/components/schemas/timestamp'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
+    tag:
+      type: object
+      required:
+        - label
+        - active
+        - currency
+      properties:
+        label:
+          $ref: '#/components/schemas/label'
+        category:
+          type: string
+          description: Category
+          example: exchange
+        abuse:
+          type: string
+          description: Abuses
+          example: fraud
+        tagpack_uri:
+          type: string
+          description: Tagpack URI
+          example: "https://example.com/tagpacks/sample.yaml"
+        source:
+          type: string
+          description: Source 
+          example: "https://foobar.com"
+        lastmod:
+          type: integer
+          format: int32
+          description: Last modified
+          example: 123456789
+        active:
+          type: boolean
+          description: whether the address has been ever used 
+          example: false
+        currency:
+          $ref: '#/components/schemas/currency'
     address_tag:
       allOf:
         - $ref: '#/components/schemas/tag'
@@ -1214,46 +1055,13 @@ components:
           properties:
             entity:
               $ref: '#/components/schemas/entity_id'
-    tag:
-      type: object
-      required:
-        - label
-        - active
-        - currency
-      properties:
-        label:
-          $ref: '#/components/schemas/label'
-        category:
-          type: string
-          description: Category
-        abuse:
-          type: string
-          description: Abuses
-        tagpack_uri:
-          type: string
-          description: Tagpack URI
-        source:
-          type: string
-          description: Source 
-        lastmod:
-          type: integer
-          format: int32
-          description: Last modified
-        active:
-          type: boolean
-          description: whether the address has been ever used 
-        currency:
-          type: string
-          description: Currency
     values:
       type: object
       properties:
-        eur:
-          type: number
-          format: float
-        usd:
-          type: number
-          format: float
+        fiat_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/rate'
         value:
           type: integer
           format: int64
@@ -1263,29 +1071,38 @@ components:
     address_id:
       type: string
       description: Address
+      example: addressA
     entity_id:
       type: integer
-      format: int64
+      format: int32
       description: Entity id
+      example: 123456
     height:
       type: integer
-      format: int64
-      minimum: 1
+      format: int32
+      minimum: 0
       description: Height
+      example: 47
     timestamp:
       type: integer
-      format: int64
+      format: int32
       description: Timestamp
-    currency_type:
-      type: string
-      description: Discriminator for different kinds of currency types
+      example: 123456789
     tx_hash:
       type: string
       description: Transaction hash
+    coinbase:
+      type: boolean
+      description: Coinbase transaction flag
     no_addresses:
-      format: int64
+      format: int32
       type: integer
       description: number of contained addresses
+    no_txs:
+      type: integer
+      format: int32
+      description: number of transactions
+      example: 11
     neighbors:
       type: object
       properties:
@@ -1303,7 +1120,7 @@ components:
         - balance
         - received
         - no_txs
-        - estimated_value
+        - value
       properties:
         id: 
           type: string
@@ -1321,32 +1138,39 @@ components:
           $ref: '#/components/schemas/values'
         received: 
           $ref: '#/components/schemas/values'
-        estimated_value: 
+        value: 
           $ref: '#/components/schemas/values'
         no_txs: 
-          type: integer
-          format: int32
-          description: number of transactions
+          $ref: '#/components/schemas/no_txs'
+    links:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/link'
     link:
       oneOf:
         - $ref: '#/components/schemas/link_utxo'
         - $ref: '#/components/schemas/tx_account'
       discriminator: 
-        propertyName: 'currency_type'
+        propertyName: 'tx_type'
         mapping:
           utxo: '#/components/schemas/link_utxo'
           account: '#/components/schemas/tx_account'
     link_utxo:
         type: object
         required:
-          - currency_type
+          - tx_type
           - tx_hash
           - height
           - timestamp
           - input_value
           - output_value
         properties:
-          currency_type:
+          tx_type:
             type: string
             default: 'utxo'
           tx_hash: 
@@ -1442,24 +1266,21 @@ components:
     tx_utxo:
       type: object
       required:
-        - currency_type
+        - tx_type
         - tx_hash
         - coinbase
         - height
-        - inputs
-        - outputs
         - timestamp
         - total_input
         - total_output
       properties:
-        currency_type:
+        tx_type:
           type: string
           default: 'utxo'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         coinbase:
-          type: boolean
-          description: Coinbase transaction flag
+          $ref: '#/components/schemas/coinbase'
         height:
           $ref: '#/components/schemas/height'
         inputs:
@@ -1489,25 +1310,18 @@ components:
             $ref: '#/components/schemas/address_id'
         value:
           $ref: '#/components/schemas/values'
-    txs:
-      type: object
-      properties:
-        next_page: 
-          $ref: '#/components/schemas/next_page'
-        txs:
-          type: array
-          items:
-            $ref: '#/components/schemas/tx'
     tx_account:
       type: object
       required:
-        - currency_type
+        - tx_type
         - tx_hash
         - height
         - timestamp
-        - values
+        - value
+        - from_address
+        - to_address
       properties:
-        currency_type:
+        tx_type:
           type: string
           default: 'account'
         tx_hash:
@@ -1516,14 +1330,59 @@ components:
           $ref: '#/components/schemas/height'
         timestamp: 
           $ref: '#/components/schemas/timestamp'
-        values:
+        value:
           $ref: '#/components/schemas/values'
+        from_address:
+          $ref: '#/components/schemas/address_id'
+        to_address:
+          $ref: '#/components/schemas/address_id'
+    address_txs:
+      type: object
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        address_txs:
+          type: array
+          items:
+            $ref: '#/components/schemas/address_tx'
+    address_tx_utxo:
+      type: object
+      required:
+        - tx_type
+        - tx_hash
+        - coinbase
+        - height
+        - timestamp
+        - value
+      properties:
+        tx_type:
+          type: string
+          default: 'utxo'
+        tx_hash:
+          $ref: '#/components/schemas/tx_hash'
+        coinbase:
+          $ref: '#/components/schemas/coinbase'
+        height:
+          $ref: '#/components/schemas/height'
+        timestamp: 
+          $ref: '#/components/schemas/timestamp'
+        value:
+          $ref: '#/components/schemas/values'
+    address_tx:
+      oneOf:
+        - $ref: '#/components/schemas/address_tx_utxo'
+        - $ref: '#/components/schemas/tx_account'
+      discriminator: 
+        propertyName: 'tx_type'
+        mapping:
+          utxo: '#/components/schemas/address_tx_utxo'
+          account: '#/components/schemas/tx_account'
     tx:
       oneOf:
         - $ref: '#/components/schemas/tx_utxo'
         - $ref: '#/components/schemas/tx_account'
       discriminator: 
-        propertyName: 'currency_type'
+        propertyName: 'tx_type'
         mapping:
           utxo: '#/components/schemas/tx_utxo'
           account: '#/components/schemas/tx_account'
@@ -1533,16 +1392,19 @@ components:
         height: 
           $ref: '#/components/schemas/height'
         rates:
-          type: object
-          properties:
-            eur:
-              type: number
-              format: float
-              description: EUR/Crypto rate
-            usd:
-              type: number
-              format: float
-              description: USD/Crypto rate
+          type: array
+          items:
+            $ref: '#/components/schemas/rate'
+    rate:
+      type: object
+      properties:
+        code:
+          type: string
+          description: iso currency code
+        value:
+          type: number
+          format: float
+          description: exchange rate
     taxonomy:
       type: object
       required:
@@ -1571,18 +1433,23 @@ components:
         description:
           type: string
           description: Description
+          example: A cryptocurrency exchange or a digital currency exchange (DCE) is a business that allows customers to trade cryptocurrencies or digital currencies for other assets.
         id:
           type: string
           description: ID
+          example: exchange
     taxonomy_key:
       type: string
       description: Taxonomy
+      example: abuse
     label:
       type: string
       description: Label
+      example: example
     uri:
       type: string
       description: URI
+      example: 'https://example.com'
     search_result:
       type: object
       properties:
@@ -1596,8 +1463,7 @@ components:
       type: object
       properties:
         currency: 
-          type: string
-          description: Currency
+          $ref: '#/components/schemas/currency'
         addresses:
           type: array
           description: The list of found addresses
@@ -1605,7 +1471,7 @@ components:
             type: string
         txs:
           type: array
-          description: The list of found transactions
+          description: The list of found transaction ids
           items: 
             type: string
     search_result_labels:
@@ -1613,3 +1479,81 @@ components:
       description: The list of matching labels
       items:
         type: string
+    only_entity_ids:
+      type: array
+      items:
+        type: integer
+        format: int32
+  examples:
+    tx_utxo: 
+      summary: UTXO transaction
+      value:
+        tx_type: 'utxo'
+        tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
+        coinbase: false
+        height: 47
+        inputs: 
+          - address: addressA
+            value: 
+              fiat_values: 
+                - code: eur
+                  value: 10
+                - code: usd
+                  value: 20
+              value: 5
+          - address: addressB
+            value:
+              fiat_values: 
+                - code: eur
+                  value: 20
+                - code: usd
+                  value: 40
+              value: 10
+        outputs:
+          - address: addressC
+            value: 
+              fiat_values: 
+                - code: eur
+                  value: 5
+                - code: usd
+                  value: 10
+              value: 2.5
+          - address: addressD
+            value:
+              fiat_values: 
+                - code: eur
+                  value: 25
+                - code: usd
+                  value: 50
+              value: 12.5
+        timestamp: 123456789
+        total_input:
+            fiat_values: 
+              - code: eur
+                value: 30
+              - code: usd
+                value: 60
+            value: 15
+        total_output:
+            fiat_values: 
+              - code: eur
+                value: 30
+              - code: usd
+                value: 60
+            value: 15
+    tx_account:
+      summary: account transaction
+      value:
+        tx_type: 'account'
+        tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
+        height: 47
+        timestamp: 123456789
+        value:
+            fiat_values: 
+              - code: eur
+                value: 30
+              - code: usd
+                value: 60
+            value: 15
+        from_address: addressA
+        to_address: addressB
