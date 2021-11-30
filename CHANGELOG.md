@@ -3,14 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.5.1] - Unreleased
+## [0.5.1] - 2021-11-30
 ### Added
 - Route for requesting data from other endpoints in bulk
 - Route for retrieving the transactions between two entities
-
 ### Changed
 - Tag response model
-
 ### Removed
 - Tag coherence
 - CSV variants of routes in favour of new bulk interface
