@@ -1035,6 +1035,10 @@ components:
           type: boolean
           description: whether the address has been ever used 
           example: false
+        is_public:
+          type: boolean
+          description: whether the address is public
+          example: true
         currency:
           $ref: '#/components/schemas/currency'
     address_tag:
