@@ -841,6 +841,10 @@ components:
           format: int32
           type: integer
           example: 123
+        no_tagged_addresses:
+          format: int32
+          type: integer
+          example: 123
         timestamp:
           $ref: '#/components/schemas/timestamp'
     block:
