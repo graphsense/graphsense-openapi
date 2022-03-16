@@ -1043,6 +1043,10 @@ components:
           type: boolean
           description: whether the address is public
           example: true
+        is_cluster_definer:
+          type: boolean
+          description: whether the address tag applies to the entity level
+          example: true
         currency:
           $ref: '#/components/schemas/currency'
     address_tag:
