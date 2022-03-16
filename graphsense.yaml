@@ -1070,6 +1070,8 @@ components:
           properties:
             entity:
               $ref: '#/components/schemas/entity_id'
+            address:
+              $ref: '#/components/schemas/address_id'
     values:
       type: object
       properties:
