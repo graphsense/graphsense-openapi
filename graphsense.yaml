@@ -841,6 +841,10 @@ components:
           format: int32
           type: integer
           example: 123
+        no_tagged_addresses:
+          format: int32
+          type: integer
+          example: 123
         timestamp:
           $ref: '#/components/schemas/timestamp'
     block:
@@ -907,6 +911,7 @@ components:
       type: object
       required:
         - entity
+        - root_address
         - balance
         - first_tx
         - last_tx
@@ -920,6 +925,8 @@ components:
       properties:
         entity: 
           $ref: '#/components/schemas/entity_id'
+        root_address: 
+          $ref: '#/components/schemas/address_id'
         balance: 
           $ref: '#/components/schemas/values'
         first_tx: 
@@ -1039,6 +1046,10 @@ components:
           type: boolean
           description: whether the address is public
           example: true
+        is_cluster_definer:
+          type: boolean
+          description: whether the address tag applies to the entity level
+          example: true
         currency:
           $ref: '#/components/schemas/currency'
     address_tag:
@@ -1059,6 +1070,8 @@ components:
           properties:
             entity:
               $ref: '#/components/schemas/entity_id'
+            address:
+              $ref: '#/components/schemas/address_id'
     values:
       type: object
       properties:
