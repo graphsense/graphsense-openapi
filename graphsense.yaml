@@ -4,7 +4,7 @@ info:
   title: GraphSense API
   version: "0.5.2"
 servers:
-  - url: 'https://api.graphsense.info'
+  - url: 'http://localhost:9000'
 paths:
   /stats:
     get:
@@ -179,7 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/neighbors'
+                $ref: '#/components/schemas/neighbor_addresses'
       summary: Get an addresses' neighbors in the address graph
       tags:
       - addresses
@@ -272,7 +272,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/neighbors'
+                $ref: '#/components/schemas/neighbor_entities'
       summary: Get an entity's neighbors in the entity graph
       tags:
       - entities
@@ -804,6 +804,10 @@ components:
       example: btc
     stats:
       type: object
+      required:
+        - currencies
+        - version
+        - request_timestamp
       properties:
         currencies:
           type: array
@@ -816,6 +820,16 @@ components:
     currency_stats:
       title: statistics of a cryptocurrency
       type: object
+      required:
+        - name
+        - no_blocks
+        - no_address_relations
+        - no_addresses
+        - no_entities
+        - no_txs
+        - no_labels
+        - no_tagged_addresses
+        - timestamp
       properties:
         name:
           type: string
@@ -864,6 +878,7 @@ components:
     address:
       type: object
       required:
+        - currency
         - address
         - entity
         - balance
@@ -876,6 +891,8 @@ components:
         - total_received
         - total_spent
       properties:
+        currency: 
+          $ref: '#/components/schemas/currency'
         address: 
           $ref: '#/components/schemas/address_id'
         entity: 
@@ -910,6 +927,7 @@ components:
     entity:
       type: object
       required:
+        - currency
         - entity
         - root_address
         - balance
@@ -923,6 +941,8 @@ components:
         - total_received
         - total_spent
       properties:
+        currency: 
+          $ref: '#/components/schemas/currency'
         entity: 
           $ref: '#/components/schemas/entity_id'
         root_address: 
@@ -1074,6 +1094,9 @@ components:
               $ref: '#/components/schemas/address_id'
     values:
       type: object
+      required:
+        - fiat_values
+        - value
       properties:
         fiat_values:
           type: array
@@ -1120,45 +1143,60 @@ components:
       format: int32
       description: number of transactions
       example: 11
-    neighbors:
+    neighbor_addresses:
       type: object
+      required:
+        - neighbors
       properties:
         next_page: 
           $ref: '#/components/schemas/next_page'
         neighbors:
           type: array
           items:
-            $ref: '#/components/schemas/neighbor'
+            $ref: '#/components/schemas/neighbor_address'
+    neighbor_entities:
+      type: object
+      required:
+        - neighbors
+      properties:
+        next_page: 
+          $ref: '#/components/schemas/next_page'
+        neighbors:
+          type: array
+          items:
+            $ref: '#/components/schemas/neighbor_entity'
     neighbor:
       type: object
       required:
-        - id
-        - node_type
-        - balance
-        - received
         - no_txs
         - value
       properties:
-        id: 
-          type: string
-          description: address or entity id
-        node_type: 
-          type: string
-          enum: [address, entity]
-          description: address or entity
         labels: 
           type: array
           items: 
             type: string
-          description: labels
-        balance: 
-          $ref: '#/components/schemas/values'
-        received: 
-          $ref: '#/components/schemas/values'
+          description: The neighbor's tag labels 
         value: 
           $ref: '#/components/schemas/values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
+    neighbor_address:
+      allOf:
+        - $ref: '#/components/schemas/neighbor'
+      type: object
+      required:
+        - address
+      properties:
+        address: 
+          $ref: '#/components/schemas/address'
+    neighbor_entity:
+      allOf:
+        - $ref: '#/components/schemas/neighbor'
+      required:
+        - entity
+      properties:
+        entity: 
+          $ref: '#/components/schemas/entity'
     links:
       type: object
       properties:
@@ -1414,6 +1452,9 @@ components:
             $ref: '#/components/schemas/rate'
     rate:
       type: object
+      required:
+        - code
+        - value
       properties:
         code:
           type: string
@@ -1469,6 +1510,9 @@ components:
       example: 'https://example.com'
     search_result:
       type: object
+      required:
+        - currencies
+        - labels
       properties:
         currencies:
           type: array
@@ -1478,6 +1522,10 @@ components:
           $ref: '#/components/schemas/search_result_labels'
     search_result_by_currency:
       type: object
+      required:
+        - currency
+        - addresses
+        - txs
       properties:
         currency: 
           $ref: '#/components/schemas/currency'
