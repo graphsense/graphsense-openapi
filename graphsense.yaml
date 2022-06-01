@@ -116,7 +116,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
@@ -180,7 +179,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/neighbor_addresses'
-      summary: Get an addresses' neighbors in the address graph
+      summary: Get an address's neighbors in the address graph
       tags:
       - addresses
   /{currency}/addresses/{address}/entity:
@@ -189,7 +188,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
-        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
@@ -225,7 +223,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/include_tags'
       responses:
         "200":
           description: OK
@@ -238,11 +235,10 @@ paths:
       - entities
   /{currency}/entities/{entity}/tags:
     get:
-      operationId: list_tags_by_entity
+      operationId: list_address_tags_by_entity
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/tag_level' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -251,7 +247,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/tags'
+                $ref: '#/components/schemas/address_tags'
       summary: Get tags for a given entity for the given level
       tags:
       - entities
@@ -410,11 +406,10 @@ paths:
         - rates
   /{currency}/tags:
     get:
-      operationId: list_tags
+      operationId: list_address_tags
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/label' 
-        - $ref: '#/components/parameters/tag_level' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -423,8 +418,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/tags'
-      summary: Returns address or entity tags associated with a given label
+                $ref: '#/components/schemas/address_tags'
+      summary: Returns address tags associated with a given label
       tags:
         - tags
   /tags/taxonomies:
@@ -632,14 +627,6 @@ components:
       schema:
         $ref: '#/components/schemas/only_entity_ids'
       description: Restrict result to given set of comma separated IDs
-    include_tags:
-      in: query
-      name: include_tags
-      required: false
-      schema:
-        type: boolean
-        default: false
-      description: Whether to include the first page of tags. Use the respective /tags endpoint to retrieve more if needed.
     include_labels:
       in: query
       name: include_labels
@@ -971,39 +958,8 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
-        tags:
-          $ref: '#/components/schemas/address_and_entity_tags'
-    tags:
-      oneOf:
-        - $ref: '#/components/schemas/entity_tags'
-        - $ref: '#/components/schemas/address_tags'
-    address_and_entity_tags:
-      type: object
-      required:
-        - entity_tags
-        - address_tags
-      properties:
-        entity_tags: 
-          type: array
-          items:
-            $ref: '#/components/schemas/entity_tag'
-          description: First page of entity tags of this entity
-        address_tags: 
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tag'
-          description: First page of address tags of this entity
-    entity_tags: 
-      type: object
-      required:
-        - entity_tags
-      properties:
-        entity_tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/entity_tag'
-        next_page:
-          $ref: '#/components/schemas/next_page'
+        best_address_tag:
+          $ref: '#/components/schemas/address_tag'
     address_tags: 
       type: object
       required:
@@ -1032,8 +988,11 @@ components:
       type: object
       required:
         - label
-        - active
         - currency
+        - tagpack_is_public
+        - tagpack_title
+        - tagpack_creator
+        - is_cluster_definer
       properties:
         label:
           $ref: '#/components/schemas/label'
@@ -1058,18 +1017,35 @@ components:
           format: int32
           description: Last modified
           example: 123456789
-        active:
-          type: boolean
-          description: whether the address has been ever used 
-          example: false
-        is_public:
+        tagpack_title:
+          type: string
+          description: Tagpack title
+          example: true
+        tagpack_is_public:
           type: boolean
           description: whether the address is public
+          example: true
+        tagpack_creator:
+          type: string
+          description: Tagpack creator
+          example: true
+        tagpack_uri:
+          type: string
+          description: Tagpack URI
           example: true
         is_cluster_definer:
           type: boolean
           description: whether the address tag applies to the entity level
           example: true
+        confidence:
+          type: string
+          description: Confidence name
+          example: 'web crawl'
+        confidence_level:
+          type: integer
+          format: int32
+          description: Confidence level
+          example: 100
         currency:
           $ref: '#/components/schemas/currency'
     address_tag:
@@ -1079,17 +1055,6 @@ components:
           required:
             - address
           properties:
-            address:
-              $ref: '#/components/schemas/address_id'
-    entity_tag:
-      allOf:
-        - $ref: '#/components/schemas/tag'
-        - type: object
-          required:
-            - entity
-          properties:
-            entity:
-              $ref: '#/components/schemas/entity_id'
             address:
               $ref: '#/components/schemas/address_id'
     values:
@@ -1240,6 +1205,8 @@ components:
             $ref: '#/components/schemas/values'
     entity_addresses:
       type: object
+      required:
+        - addresses
       properties:
         next_page: 
           $ref: '#/components/schemas/next_page'
@@ -1393,6 +1360,8 @@ components:
           $ref: '#/components/schemas/address_id'
     address_txs:
       type: object
+      required:
+        - address_txs
       properties:
         next_page: 
           $ref: '#/components/schemas/next_page'
