@@ -345,7 +345,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/search_result_level1'
+                type: array
+                items: 
+                  $ref: '#/components/schemas/search_result_level1'
       summary: Search deeply for matching neighbors
       tags:
       - entities
@@ -1218,6 +1220,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1228,6 +1232,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1238,6 +1244,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1248,6 +1256,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1258,6 +1268,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1268,6 +1280,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/search_result_leaf'
         - type: object
+          required: 
+            - paths
           properties:
             paths:
               type: array
@@ -1276,11 +1290,12 @@ components:
               description: Branches to matching entities
     search_result_leaf:
       type: object
+      required:
+        - neighbor
+        - matching_addresses
       properties:
-        node:
-          $ref: '#/components/schemas/entity'
-        relation:
-          $ref: '#/components/schemas/neighbor'
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
         matching_addresses:
           type: array
           items:
