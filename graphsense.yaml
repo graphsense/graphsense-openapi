@@ -406,11 +406,10 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
-  /{currency}/tags:
+  /tags:
     get:
       operationId: list_address_tags
       parameters:
-        - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/label' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -852,10 +851,18 @@ components:
           $ref: '#/components/schemas/timestamp'
     block:
       type: object
+      required:
+        - currency
+        - height
+        - block_hash
+        - timestamp
+        - no_txs
       properties:
         block_hash:
           type: string
           format: string
+        currency: 
+          $ref: '#/components/schemas/currency'
         height: 
           $ref: '#/components/schemas/height'
         no_txs: 
@@ -1303,23 +1310,36 @@ components:
     tx_utxo:
       type: object
       required:
+        - currency
         - tx_type
         - tx_hash
         - coinbase
         - height
         - timestamp
+        - no_inputs
+        - no_outputs
         - total_input
         - total_output
       properties:
         tx_type:
           type: string
           default: 'utxo'
+        currency:
+          $ref: '#/components/schemas/currency'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         coinbase:
           $ref: '#/components/schemas/coinbase'
         height:
           $ref: '#/components/schemas/height'
+        no_inputs: 
+          format: int32
+          type: integer
+          description: number of input addresses
+        no_outputs: 
+          format: int32
+          type: integer
+          description: number of output addresses
         inputs:
           $ref: '#/components/schemas/tx_values'
         outputs:
@@ -1351,6 +1371,7 @@ components:
       type: object
       required:
         - tx_type
+        - currency
         - tx_hash
         - height
         - timestamp
@@ -1361,6 +1382,8 @@ components:
         tx_type:
           type: string
           default: 'account'
+        currency:
+          $ref: '#/components/schemas/currency'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
         height:
@@ -1389,6 +1412,7 @@ components:
       required:
         - tx_type
         - tx_hash
+        - currency
         - coinbase
         - height
         - timestamp
@@ -1399,6 +1423,8 @@ components:
           default: 'utxo'
         tx_hash:
           $ref: '#/components/schemas/tx_hash'
+        currency:
+          $ref: '#/components/schemas/currency'
         coinbase:
           $ref: '#/components/schemas/coinbase'
         height:
