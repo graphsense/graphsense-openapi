@@ -1173,6 +1173,8 @@ components:
           $ref: '#/components/schemas/entity'
     links:
       type: object
+      required:
+        - links
       properties:
         next_page: 
           $ref: '#/components/schemas/next_page'
@@ -1194,6 +1196,7 @@ components:
         required:
           - tx_type
           - tx_hash
+          - currency
           - height
           - timestamp
           - input_value
@@ -1204,6 +1207,8 @@ components:
             default: 'utxo'
           tx_hash: 
             $ref: '#/components/schemas/tx_hash'
+          currency:
+            $ref: '#/components/schemas/currency'
           height: 
             $ref: '#/components/schemas/height'
           timestamp: 
