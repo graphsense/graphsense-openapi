@@ -936,6 +936,7 @@ components:
         - no_outgoing_txs
         - total_received
         - total_spent
+        - no_address_tags
       properties:
         currency: 
           $ref: '#/components/schemas/currency'
@@ -969,6 +970,8 @@ components:
           $ref: '#/components/schemas/values'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
+        no_address_tags:
+          $ref: '#/components/schemas/no_address_tags'
     address_tags: 
       type: object
       required:
@@ -1112,6 +1115,10 @@ components:
       format: int32
       type: integer
       description: number of contained addresses
+    no_address_tags:
+      format: int32
+      type: integer
+      description: number of address tags
     no_txs:
       type: integer
       format: int32
