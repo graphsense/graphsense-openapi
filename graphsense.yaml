@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: GraphSense API
   title: GraphSense API
-  version: "0.5.2"
+  version: "1.0.0-alpha"
 servers:
   - url: 'http://localhost:9000'
 paths:
@@ -915,11 +915,6 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/address_tag'
-          description: First page of tags of this address
     entity:
       type: object
       required:
