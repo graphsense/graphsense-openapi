@@ -251,7 +251,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/address_tags'
-      summary: Get tags for a given entity for the given level
+      summary: Get address tags for a given entity 
       tags:
       - entities
   /{currency}/entities/{entity}/neighbors:
@@ -770,7 +770,7 @@ components:
           - get_address_entity
           - list_address_links
           - get_entity
-          - list_tags_by_entity
+          - list_address_tags_by_entity
           - list_entity_neighbors
           - list_entity_txs
           - list_entity_links
