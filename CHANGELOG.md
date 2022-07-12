@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Property `currency` for most response objects.
 - Properties `no_inputs` and `no_outputs` for transaction objects.
 - Properties `no_address_tags` and `best_address_tag` to entity objects.
-- Properties `tagpack_creator`, `tagpack_uri`, `confidence` and `confidence_level` to address tag objects.
+- Properties `entity`, `tagpack_creator`, `tagpack_uri`, `confidence` and `confidence_level` to address tag objects.
 
 ### Changed
 - `list_tags_by_entity` -> `list_address_tags_by_entity`
