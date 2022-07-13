@@ -1170,11 +1170,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/neighbor_entity'
-    neighbor:
+    neighbor_address:
       type: object
       required:
         - no_txs
         - value
+        - address
       properties:
         labels: 
           type: array
@@ -1185,21 +1186,24 @@ components:
           $ref: '#/components/schemas/values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
-    neighbor_address:
-      allOf:
-        - $ref: '#/components/schemas/neighbor'
-      type: object
-      required:
-        - address
-      properties:
         address: 
           $ref: '#/components/schemas/address'
     neighbor_entity:
-      allOf:
-        - $ref: '#/components/schemas/neighbor'
+      type: object
       required:
+        - no_txs
+        - value
         - entity
       properties:
+        labels: 
+          type: array
+          items: 
+            type: string
+          description: The neighbor's tag labels 
+        value: 
+          $ref: '#/components/schemas/values'
+        no_txs: 
+          $ref: '#/components/schemas/no_txs'
         entity: 
           $ref: '#/components/schemas/entity'
     links:
