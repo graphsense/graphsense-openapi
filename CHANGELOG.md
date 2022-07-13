@@ -10,7 +10,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Properties `no_inputs` and `no_outputs` for transaction objects.
 - Properties `no_address_tags` and `best_address_tag` to entity objects.
 - Properties `entity`, `tagpack_creator`, `tagpack_uri`, `confidence` and `confidence_level` to address tag objects.
-
 ### Changed
 - `list_tags_by_entity` -> `list_address_tags_by_entity`
 - `list_entity_neighbors` and `list_address_neighbors` now return the full entity/address object as part of an adapted response object.
@@ -18,7 +17,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `list_tags` -> `list_address_tags`, now returning `address_tags` of any currency
 - Made object properties which are required `required`.
 - Property `is_public` -> `tagpack_is_public` for address tag objects.
-
 ### Removed
 There are no tags on the entity level anymore. Tags always apply to an address. In the case of entities, it's the root address.
 - Flag `include_tags` for `get_entity`, `get_address` and `get_address_entity`
