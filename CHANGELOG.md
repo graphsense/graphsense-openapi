@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - `list_tags_by_entity` -> `list_address_tags_by_entity`
 - `list_entity_neighbors` and `list_address_neighbors` now return the full entity/address object as part of an adapted response object.
-- `search_entity_neighbors` returns an array of subtrees now, response schema adapated.
+- `search_entity_neighbors` returns an array of subtrees now, response schema adapted.
 - `list_tags` -> `list_address_tags`, now returning `address_tags` of any currency
 - Made object properties which are required `required`.
 - Property `is_public` -> `tagpack_is_public` for address tag objects.
