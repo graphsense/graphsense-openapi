@@ -577,6 +577,7 @@ components:
       required: false
       schema:
         type: integer
+        format: int32
         minimum: 1
       description: Number of items returned in a single page
       example: 10
@@ -773,6 +774,7 @@ components:
       required: false
       schema:
         type: integer
+        format: int32
         default: 10
         maximum: 100
       description: Maximum number of search results
@@ -809,6 +811,7 @@ components:
       required: true
       schema:
         type: integer
+        format: int32
       description: Number of pages to retrieve for operations with list response
       example: 1
   schemas:
