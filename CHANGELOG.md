@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1] - 2022-08-26
+### Added
+- format for some ints
+- denormalize neighbors response objects
+
 ## [1.0.0] - 2022-07-13
 ### Added
 - examples for `list_block_txs`, `list_address_txs`, `list_entity_txs`, `list_tags_by_address`, `list_address_links`, `list_entity_links`, `list_address_tags_by_entity`, `get_tx_io`, `get_exchange_rates`, `list_address_tags`
