@@ -122,7 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/address'
-      summary: Get an address, optionally with tags
+      summary: Get an address
       tags:
       - addresses
   /{currency}/addresses/{address}/txs:
@@ -238,7 +238,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/entity'
-      summary: Get an entity, optionally with tags
+      summary: Get an entity
       tags:
       - entities
   /{currency}/entities/{entity}/tags:
@@ -280,7 +280,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/neighbor_entities'
-      summary: Get an entity's neighbors in the entity graph
+      summary: Get an entity's direct neighbors
       tags:
       - entities
   /{currency}/entities/{entity}/txs:
