@@ -915,6 +915,7 @@ components:
         - no_outgoing_txs
         - total_received
         - total_spent
+        - status
       properties:
         currency: 
           $ref: '#/components/schemas/currency'
@@ -944,6 +945,12 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
+        status:
+          type: string
+          enum:
+            - clean
+            - dirty
+            - new
     entity:
       type: object
       required:
