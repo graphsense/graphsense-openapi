@@ -131,6 +131,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
+        - $ref: '#/components/parameters/direction_txs' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -174,6 +175,7 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/direction' 
+        - $ref: '#/components/parameters/only_address_ids' 
         - $ref: '#/components/parameters/include_labels' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -289,6 +291,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/direction_txs' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -590,6 +593,15 @@ components:
         enum: [in, out]
       description: Incoming or outgoing neighbors
       example: out
+    direction_txs:
+      in: query
+      name: direction
+      required: false
+      schema:
+        type: string
+        enum: [in, out]
+      description: Incoming or outgoing transactions
+      example: out
     io:
       in: path
       name: io
@@ -639,9 +651,9 @@ components:
         $ref: '#/components/schemas/tx_hash'
       description: The transaction hash
       example: ab188013
-    address_ids:
+    only_address_ids:
       in: query
-      name: ids
+      name: only_ids
       required: false
       schema:
         type: array
@@ -653,7 +665,10 @@ components:
       name: only_ids
       required: false
       schema:
-        $ref: '#/components/schemas/only_entity_ids'
+        type: array
+        items:
+          type: integer
+          format: int32
       description: Restrict result to given set of comma separated IDs
     include_labels:
       in: query
@@ -1604,11 +1619,6 @@ components:
       description: The list of matching labels
       items:
         type: string
-    only_entity_ids:
-      type: array
-      items:
-        type: integer
-        format: int32
   examples:
     tx_utxo: 
       summary: UTXO transaction
