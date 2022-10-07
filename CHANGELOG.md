@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [22.10] - 2022-10-07
+### Added
+- `only_ids` filter for `list_address_neighbors`
+- address status field (possible status: clean, dirty, new)
+- `direction` to `list_address_txs` and `list_entity_txs` to filter transactions whether they are incoming or outgoing
+
 ## [1.0.1] - 2022-08-26
 ### Added
 - format for some ints
