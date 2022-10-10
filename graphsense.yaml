@@ -7,7 +7,7 @@ info:
     email: contact@ikna.io
   version: "22.10"
 servers:
-  - url: /
+  - url: 'https://api.ikna.io'
 paths:
   /stats:
     get:
