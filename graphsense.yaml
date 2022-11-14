@@ -1289,77 +1289,113 @@ components:
           items:
             $ref: '#/components/schemas/address'
     search_result_level1:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_level2'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_level2'
+          description: Branches to matching entities
     search_result_level2:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_level3'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_level3'
+          description: Branches to matching entities
     search_result_level3:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_level4'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_level4'
+          description: Branches to matching entities
     search_result_level4:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_level5'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_level5'
+          description: Branches to matching entities
     search_result_level5:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_level6'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_level6'
+          description: Branches to matching entities
     search_result_level6:
-      allOf:
-        - $ref: '#/components/schemas/search_result_leaf'
-        - type: object
-          required: 
-            - paths
-          properties:
-            paths:
-              type: array
-              items:
-                $ref: '#/components/schemas/search_result_leaf'
-              description: Branches to matching entities
+      type: object
+      required: 
+        - neighbor
+        - matching_addresses
+        - paths
+      properties:
+        neighbor:
+          $ref: '#/components/schemas/neighbor_entity'
+        matching_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/search_result_leaf'
+          description: Branches to matching entities
     search_result_leaf:
       type: object
       required:
