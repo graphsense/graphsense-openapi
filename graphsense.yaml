@@ -524,6 +524,8 @@ paths:
           application/json:
             schema:
               type: object
+            example:
+              height: [1,2,3]
         description: Map of the operation's parameter names to (arrays of) values
       responses:
         "200":
