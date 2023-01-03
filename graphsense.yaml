@@ -942,6 +942,8 @@ components:
           $ref: '#/components/schemas/entity_id'
         balance: 
           $ref: '#/components/schemas/values'
+        token_balances:
+          $ref: '#/components/schemas/token_values'
         first_tx: 
           $ref: '#/components/schemas/tx_summary'
         last_tx: 
@@ -962,6 +964,10 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
+        total_tokens_received: 
+          $ref: '#/components/schemas/token_values'
+        total_tokens_spent: 
+          $ref: '#/components/schemas/token_values'
         status:
           type: string
           enum:
@@ -994,6 +1000,8 @@ components:
           $ref: '#/components/schemas/address_id'
         balance: 
           $ref: '#/components/schemas/values'
+        token_balances:
+          $ref: '#/components/schemas/token_values'
         first_tx: 
           $ref: '#/components/schemas/tx_summary'
         last_tx: 
@@ -1016,6 +1024,10 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
+        total_tokens_received: 
+          $ref: '#/components/schemas/token_values'
+        total_tokens_spent: 
+          $ref: '#/components/schemas/token_values'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
         no_address_tags:
@@ -1089,10 +1101,6 @@ components:
           type: string
           description: Tagpack creator
           example: true
-        tagpack_uri:
-          type: string
-          description: Tagpack URI
-          example: true
         is_cluster_definer:
           type: boolean
           description: whether the address tag applies to the entity level
@@ -1120,6 +1128,24 @@ components:
               $ref: '#/components/schemas/address_id'
             entity:
               $ref: '#/components/schemas/entity_id'
+    token_values:
+      type: object
+      description: Per token value-flow
+      additionalProperties:
+        $ref: '#/components/schemas/values'
+      example:
+        USDT:
+          fiat_values:
+            - 0.2
+            - 0.3
+          value:
+            0.2
+        WETH:
+          fiat_values:
+            - 0.2
+            - 0.3
+          value:
+            200000000000000
     values:
       type: object
       required:
@@ -1495,6 +1521,8 @@ components:
           $ref: '#/components/schemas/timestamp'
         value:
           $ref: '#/components/schemas/values'
+        token_values:
+          $ref: '#/components/schemas/token_values'
         from_address:
           $ref: '#/components/schemas/address_id'
         to_address:
@@ -1784,6 +1812,14 @@ components:
               - code: usd
                 value: 60
             value: 15
+        token_values:
+          USDT:
+            fiat_values:
+              - code: eur
+                value: 58
+              - code: usd
+                value: 60
+            value: 60
         from_address: addressA
         to_address: addressB
     txs_account:
