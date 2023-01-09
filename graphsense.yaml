@@ -782,7 +782,6 @@ components:
       schema:
         type: string
         minLength: 3
-        pattern: '^[\w ]+$'
       description: It can be (the beginning of) an address, a transaction or a label
       example: foo
     limit:
