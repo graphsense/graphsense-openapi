@@ -1632,6 +1632,8 @@ components:
             $ref: '#/components/schemas/search_result_by_currency'
         labels:
           $ref: '#/components/schemas/search_result_labels'
+        actors:
+          $ref: '#/components/schemas/search_result_actors'
     search_result_by_currency:
       type: object
       required:
@@ -1654,6 +1656,11 @@ components:
     search_result_labels:
       type: array
       description: The list of matching labels
+      items:
+        type: string
+    search_result_actors:
+      type: array
+      description: The list of matching actors
       items:
         type: string
   examples:
