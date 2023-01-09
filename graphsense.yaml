@@ -377,7 +377,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/tx_hash' 
-        - $ref: '#/components/parameters/include_io' 
+        - $ref: '#/components/parameters/include_io'
+        - $ref: '#/components/parameters/token_tx_id'
       responses:
         "200":
           description: OK
@@ -391,6 +392,25 @@ paths:
                 tx_account:
                   $ref: '#/components/examples/tx_account'
       summary: Returns details of a specific transaction identified by its hash.
+      tags:
+        - txs
+  /{currency}/token_txs/{tx_hash}:
+    get:
+      operationId: get_token_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/tx_hash' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_account'
+              examples:
+                tx_accounts:
+                  $ref: '#/components/examples/tx_accounts'
+      summary: Returns all token transactions in a given transaction
       tags:
         - txs
   /{currency}/txs/{tx_hash}/{io}:
@@ -688,6 +708,14 @@ components:
         type: boolean
         default: false
       description: Whether to include inputs/outputs of a transaction (UTXO only)
+    token_tx_id:
+      in: query
+      name: token_tx_id
+      required: false
+      schema:
+        type: integer
+        default: false
+      description: Select a specific token_transaction (Account model only)
     tag_level:
       in: query
       name: level
@@ -1237,6 +1265,8 @@ components:
           description: The neighbor's tag labels 
         value: 
           $ref: '#/components/schemas/values'
+        token_values:
+          $ref: '#/components/schemas/token_values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
         address: 
@@ -1255,6 +1285,8 @@ components:
           description: The neighbor's tag labels 
         value: 
           $ref: '#/components/schemas/values'
+        token_values:
+          $ref: '#/components/schemas/token_values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
         entity: 
@@ -1511,6 +1543,8 @@ components:
         tx_type:
           type: string
           default: 'account'
+        token_tx_id:
+          type: integer
         currency:
           $ref: '#/components/schemas/currency'
         tx_hash:
@@ -1521,12 +1555,15 @@ components:
           $ref: '#/components/schemas/timestamp'
         value:
           $ref: '#/components/schemas/values'
-        token_values:
-          $ref: '#/components/schemas/token_values'
         from_address:
           $ref: '#/components/schemas/address_id'
         to_address:
           $ref: '#/components/schemas/address_id'
+    txs_account:
+      type: array
+      description: A list of account model transactions
+      items: 
+        $ref: '#/components/schemas/tx_account'
     address_txs:
       type: object
       required:
