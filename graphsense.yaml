@@ -1839,6 +1839,7 @@ components:
       summary: account transaction
       value:
         tx_type: 'account'
+        currency: 'ETH'
         tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
         height: 47
         timestamp: 123456789
@@ -1849,20 +1850,13 @@ components:
               - code: usd
                 value: 60
             value: 15
-        token_values:
-          USDT:
-            fiat_values:
-              - code: eur
-                value: 58
-              - code: usd
-                value: 60
-            value: 60
         from_address: addressA
         to_address: addressB
     txs_account:
       summary: list of account transactions
       value:
       - tx_type: 'account'
+        currency: 'ETH'
         tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
         height: 47
         timestamp: 123456789
