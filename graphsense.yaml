@@ -408,8 +408,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/txs_account'
               examples:
-                tx_accounts:
-                  $ref: '#/components/examples/tx_accounts'
+                txs_account:
+                  $ref: '#/components/examples/txs_account'
       summary: Returns all token transactions in a given transaction
       tags:
         - txs
