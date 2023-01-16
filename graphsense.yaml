@@ -1164,13 +1164,13 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/values'
       example:
-        USDT:
+        usdt:
           fiat_values:
             - 0.2
             - 0.3
           value:
             0.2
-        WETH:
+        weth:
           fiat_values:
             - 0.2
             - 0.3
