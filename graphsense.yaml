@@ -396,7 +396,7 @@ paths:
         - txs
   /{currency}/token_txs/{tx_hash}:
     get:
-      operationId: get_token_txs
+      operationId: list_token_txs
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/tx_hash' 
