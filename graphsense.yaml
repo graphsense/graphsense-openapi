@@ -452,6 +452,24 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
+  /{currency}/supported_tokens:
+    get:
+      operationId: list_supported_tokens
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                rates:
+                  $ref: '#/components/examples/token_configs'
+              schema:
+                $ref: '#/components/schemas/token_configs'
+      summary: Returns a list of supported token (sub)currencies.
+      tags:
+        - tokens
   /tags:
     get:
       operationId: list_address_tags
@@ -1724,7 +1742,42 @@ components:
       description: The list of matching labels
       items:
         type: string
+    token_config:
+      type: object
+      required:
+        - ticker
+        - decimals
+      properties:
+        ticker:
+          type: string
+          description: ticker symbol of the currency e.g. USDT
+        decimals:
+          type: integer
+          description: the number of digits after the comma. Values are always delivered as integers. This value can be used to set the decimal point at the right place. 
+        peg_currency:
+          type: string
+          description: is set if token is a stablecoin. It holds the thicker symbol of the currency the tokens is pegged to. 
+    token_configs:
+      type: object
+      required:
+        - token_configs
+      properties:
+        token_configs:
+          type: array
+          description: list of supported tokens and their parameters
+          items:
+            $ref: '#/components/schemas/token_config'
   examples:
+    token_configs:
+      summary: Example token config
+      value:
+        token_configs:
+          - ticker: USDT
+            decimals: 6
+            peg_currency: USD
+          - ticker: WETH
+            decimals: 18
+            peg_currency: ETH
     tx_utxo: 
       summary: UTXO transaction
       value:
