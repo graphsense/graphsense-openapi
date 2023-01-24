@@ -1579,6 +1579,9 @@ components:
           $ref: '#/components/schemas/address_id'
         to_address:
           $ref: '#/components/schemas/address_id'
+        contract_creation:
+          type: boolean
+          description: Indicates if this transaction created a new contract. Recipient address is the address of the new contract. 
     txs_account:
       type: array
       description: A list of account model transactions
