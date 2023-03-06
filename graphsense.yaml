@@ -377,7 +377,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/tx_hash' 
-        - $ref: '#/components/parameters/include_io' 
+        - $ref: '#/components/parameters/include_io'
+        - $ref: '#/components/parameters/token_tx_id'
       responses:
         "200":
           description: OK
@@ -391,6 +392,25 @@ paths:
                 tx_account:
                   $ref: '#/components/examples/tx_account'
       summary: Returns details of a specific transaction identified by its hash.
+      tags:
+        - txs
+  /{currency}/token_txs/{tx_hash}:
+    get:
+      operationId: list_token_txs
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+        - $ref: '#/components/parameters/tx_hash' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/txs_account'
+              examples:
+                txs_account:
+                  $ref: '#/components/examples/txs_account'
+      summary: Returns all token transactions in a given transaction
       tags:
         - txs
   /{currency}/txs/{tx_hash}/{io}:
@@ -432,6 +452,24 @@ paths:
       summary: Returns exchange rate for a given height
       tags:
         - rates
+  /{currency}/supported_tokens:
+    get:
+      operationId: list_supported_tokens
+      parameters:
+        - $ref: '#/components/parameters/currency' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                rates:
+                  $ref: '#/components/examples/token_configs'
+              schema:
+                $ref: '#/components/schemas/token_configs'
+      summary: Returns a list of supported token (sub)currencies.
+      tags:
+        - tokens
   /tags:
     get:
       operationId: list_address_tags
@@ -688,6 +726,14 @@ components:
         type: boolean
         default: false
       description: Whether to include inputs/outputs of a transaction (UTXO only)
+    token_tx_id:
+      in: query
+      name: token_tx_id
+      required: false
+      schema:
+        type: integer
+        default: false
+      description: Select a specific token_transaction (Account model only)
     tag_level:
       in: query
       name: level
@@ -941,6 +987,8 @@ components:
           $ref: '#/components/schemas/entity_id'
         balance: 
           $ref: '#/components/schemas/values'
+        token_balances:
+          $ref: '#/components/schemas/token_values'
         first_tx: 
           $ref: '#/components/schemas/tx_summary'
         last_tx: 
@@ -961,6 +1009,12 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
+        total_tokens_received: 
+          $ref: '#/components/schemas/token_values'
+        total_tokens_spent: 
+          $ref: '#/components/schemas/token_values'
+        is_contract:
+          type: boolean
         status:
           type: string
           enum:
@@ -993,6 +1047,8 @@ components:
           $ref: '#/components/schemas/address_id'
         balance: 
           $ref: '#/components/schemas/values'
+        token_balances:
+          $ref: '#/components/schemas/token_values'
         first_tx: 
           $ref: '#/components/schemas/tx_summary'
         last_tx: 
@@ -1015,6 +1071,10 @@ components:
           $ref: '#/components/schemas/values'
         total_spent: 
           $ref: '#/components/schemas/values'
+        total_tokens_received: 
+          $ref: '#/components/schemas/token_values'
+        total_tokens_spent: 
+          $ref: '#/components/schemas/token_values'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
         no_address_tags:
@@ -1088,10 +1148,6 @@ components:
           type: string
           description: Tagpack creator
           example: true
-        tagpack_uri:
-          type: string
-          description: Tagpack URI
-          example: true
         is_cluster_definer:
           type: boolean
           description: whether the address tag applies to the entity level
@@ -1119,6 +1175,24 @@ components:
               $ref: '#/components/schemas/address_id'
             entity:
               $ref: '#/components/schemas/entity_id'
+    token_values:
+      type: object
+      description: Per token value-flow
+      additionalProperties:
+        $ref: '#/components/schemas/values'
+      example:
+        usdt:
+          fiat_values:
+            - 0.2
+            - 0.3
+          value:
+            0.2
+        weth:
+          fiat_values:
+            - 0.2
+            - 0.3
+          value:
+            200000000000000
     values:
       type: object
       required:
@@ -1210,6 +1284,8 @@ components:
           description: The neighbor's tag labels 
         value: 
           $ref: '#/components/schemas/values'
+        token_values:
+          $ref: '#/components/schemas/token_values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
         address: 
@@ -1228,6 +1304,8 @@ components:
           description: The neighbor's tag labels 
         value: 
           $ref: '#/components/schemas/values'
+        token_values:
+          $ref: '#/components/schemas/token_values'
         no_txs: 
           $ref: '#/components/schemas/no_txs'
         entity: 
@@ -1484,6 +1562,8 @@ components:
         tx_type:
           type: string
           default: 'account'
+        token_tx_id:
+          type: integer
         currency:
           $ref: '#/components/schemas/currency'
         tx_hash:
@@ -1498,6 +1578,14 @@ components:
           $ref: '#/components/schemas/address_id'
         to_address:
           $ref: '#/components/schemas/address_id'
+        contract_creation:
+          type: boolean
+          description: Indicates if this transaction created a new contract. Recipient address is the address of the new contract. 
+    txs_account:
+      type: array
+      description: A list of account model transactions
+      items: 
+        $ref: '#/components/schemas/tx_account'
     address_txs:
       type: object
       required:
@@ -1663,7 +1751,42 @@ components:
       description: The list of matching actors
       items:
         type: string
+    token_config:
+      type: object
+      required:
+        - ticker
+        - decimals
+      properties:
+        ticker:
+          type: string
+          description: ticker symbol of the currency e.g. USDT
+        decimals:
+          type: integer
+          description: the number of digits after the comma. Values are always delivered as integers. This value can be used to set the decimal point at the right place. 
+        peg_currency:
+          type: string
+          description: is set if token is a stablecoin. It holds the thicker symbol of the currency the tokens is pegged to. 
+    token_configs:
+      type: object
+      required:
+        - token_configs
+      properties:
+        token_configs:
+          type: array
+          description: list of supported tokens and their parameters
+          items:
+            $ref: '#/components/schemas/token_config'
   examples:
+    token_configs:
+      summary: Example token config
+      value:
+        token_configs:
+          - ticker: USDT
+            decimals: 6
+            peg_currency: USD
+          - ticker: WETH
+            decimals: 18
+            peg_currency: ETH
     tx_utxo: 
       summary: UTXO transaction
       value:
@@ -1780,6 +1903,7 @@ components:
       summary: account transaction
       value:
         tx_type: 'account'
+        currency: 'ETH'
         tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
         height: 47
         timestamp: 123456789
@@ -1796,6 +1920,7 @@ components:
       summary: list of account transactions
       value:
       - tx_type: 'account'
+        currency: 'ETH'
         tx_hash: '04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd'
         height: 47
         timestamp: 123456789
