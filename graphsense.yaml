@@ -490,6 +490,38 @@ paths:
       summary: Returns address tags associated with a given label
       tags:
         - tags
+  /tags/actor/{actor}:
+    get:
+      operationId: get_actor
+      parameters:
+        - $ref: '#/components/parameters/actor'  
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/actor'
+      summary: Returns an actor given its unique id or (unique) label
+      tags:
+        - tags
+  /tags/actor/{actor}/tags:
+    get:
+      operationId: get_actor_tags
+      parameters:
+        - $ref: '#/components/parameters/actor'  
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/address_tags'
+      summary: Returns the address tags for a given actor
+      tags:
+        - tags
   /tags/taxonomies:
     get:
       operationId: list_taxonomies
@@ -581,6 +613,15 @@ paths:
       x-streamed: true
 components:
   parameters:
+    actor:
+      in: path
+      name: actor
+      required: true
+      schema:
+        type: string
+        format: string
+      description: actor id
+      example: 'binance'
     currency:
       in: path
       name: currency
@@ -1175,6 +1216,76 @@ components:
               $ref: '#/components/schemas/address_id'
             entity:
               $ref: '#/components/schemas/entity_id'
+    actors:
+      type: array
+      items:
+        $ref: '#/components/schemas/actor'
+    actor:
+      type: object
+      required:
+        - id
+        - label
+        - uri
+        - categories
+        - jurisdictions
+      properties:
+        id:
+          type: string
+          description: Id of the actor
+          example: binance
+        label:
+          $ref: '#/components/schemas/label'
+        uri:
+          $ref: '#/components/schemas/uri'
+        categories:
+          type: array
+          description: A list actor categories
+          items:
+            type: string
+        jurisdictions:
+          type: array
+          description: A list jurisdictions
+          items:
+            $ref: '#/components/schemas/country'
+        context:
+          $ref: '#/components/schemas/actor_context'
+    actor_context:
+      type: object
+      properties:
+        uris:
+          type: array
+          description: list of additonal uris identifying the actor
+          items:
+            $ref: '#/components/schemas/uri'
+        images:
+          type: array
+          description: list of uris to logos of the actor
+          items:
+            $ref: '#/components/schemas/uri'
+        refs:
+          type: array
+          description: list of uris to further information of the actors.
+          items:
+            $ref: '#/components/schemas/uri'
+        coingecko_ids:
+          type: array
+          description: list of references to coingecko exchanges or coins
+          items:
+            type: string
+        defilama_ids:
+          type: array
+          description: list of references to defilama
+          items:
+            type: string
+        twitter_handle:
+          type: string 
+          description: semi-colon separated list of twitter handles used by the actor
+        github_organisation:
+          type: string
+          description: semi-colon separated list of github organisations used by the actor
+        legal_name:
+          type: string
+          description: Name of the legal entity registerd by the actor.       
     token_values:
       type: object
       description: Per token value-flow
@@ -1704,6 +1815,10 @@ components:
       type: string
       description: Label
       example: example
+    country:
+      type: string
+      description: 2-letter ISO 3166 country codes
+      example: US
     uri:
       type: string
       description: URI
@@ -1750,7 +1865,15 @@ components:
       type: array
       description: The list of matching actors
       items:
-        type: string
+        $ref: '#/components/schemas/search_result_actor'
+    search_result_actor:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id of the actor
+        label:
+          $ref: '#/components/schemas/label'
     token_config:
       type: object
       required:
