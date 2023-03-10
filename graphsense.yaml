@@ -1160,6 +1160,10 @@ components:
           type: string
           description: Category
           example: exchange
+        actor:
+          type: string
+          description: id of the actor that controlls the address
+          example: binance
         abuse:
           type: string
           description: Abuses
