@@ -1054,6 +1054,8 @@ components:
           $ref: '#/components/schemas/token_values'
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
+        actors: 
+          $ref: '#/components/schemas/actor_refs'
         is_contract:
           type: boolean
         status:
@@ -1116,6 +1118,8 @@ components:
           $ref: '#/components/schemas/token_values'
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
+        actors: 
+          $ref: '#/components/schemas/actor_refs'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
         no_address_tags:
@@ -1241,6 +1245,10 @@ components:
           $ref: '#/components/schemas/label'
         uri:
           $ref: '#/components/schemas/uri'
+        nr_tags:
+          type: integer
+          description: number of address tags of the actor
+          example: 100
         categories:
           type: array
           description: A list actor categories
@@ -1255,6 +1263,12 @@ components:
           $ref: '#/components/schemas/actor_context'
     actor_context:
       type: object
+      required:
+        - uris
+        - images
+        - refs
+        - twitter_handle
+        - github_organisation
       properties:
         uris:
           type: array
@@ -1840,7 +1854,7 @@ components:
         labels:
           $ref: '#/components/schemas/search_result_labels'
         actors:
-          $ref: '#/components/schemas/search_result_actors'
+          $ref: '#/components/schemas/actor_refs'
     search_result_by_currency:
       type: object
       required:
@@ -1865,13 +1879,16 @@ components:
       description: The list of matching labels
       items:
         type: string
-    search_result_actors:
+    actor_refs:
       type: array
       description: The list of matching actors
       items:
-        $ref: '#/components/schemas/search_result_actor'
-    search_result_actor:
+        $ref: '#/components/schemas/actor_ref'
+    actor_ref:
       type: object
+      required:
+        - id
+        - label
       properties:
         id:
           type: string
