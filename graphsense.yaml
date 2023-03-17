@@ -1267,8 +1267,8 @@ components:
         - uris
         - images
         - refs
-        - twitter_handle
-        - github_organisation
+        - coingecko_ids
+        - defilama_ids
       properties:
         uris:
           type: array
