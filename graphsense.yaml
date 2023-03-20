@@ -1055,7 +1055,7 @@ components:
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
         actors: 
-          $ref: '#/components/schemas/actor_refs'
+          $ref: '#/components/schemas/labeled_item_refs'
         is_contract:
           type: boolean
         status:
@@ -1119,7 +1119,7 @@ components:
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
         actors: 
-          $ref: '#/components/schemas/actor_refs'
+          $ref: '#/components/schemas/labeled_item_refs'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
         no_address_tags:
@@ -1253,12 +1253,12 @@ components:
           type: array
           description: A list actor categories
           items:
-            type: string
+            $ref: '#/components/schemas/labeled_item_ref'
         jurisdictions:
           type: array
           description: A list jurisdictions
           items:
-            $ref: '#/components/schemas/country'
+            $ref: '#/components/schemas/labeled_item_ref'
         context:
           $ref: '#/components/schemas/actor_context'
     actor_context:
@@ -1833,10 +1833,6 @@ components:
       type: string
       description: Label
       example: example
-    country:
-      type: string
-      description: 2-letter ISO 3166 country codes
-      example: US
     uri:
       type: string
       description: URI
@@ -1854,7 +1850,7 @@ components:
         labels:
           $ref: '#/components/schemas/search_result_labels'
         actors:
-          $ref: '#/components/schemas/actor_refs'
+          $ref: '#/components/schemas/labeled_item_refs'
     search_result_by_currency:
       type: object
       required:
@@ -1879,12 +1875,12 @@ components:
       description: The list of matching labels
       items:
         type: string
-    actor_refs:
+    labeled_item_refs:
       type: array
       description: The list of matching actors
       items:
-        $ref: '#/components/schemas/actor_ref'
-    actor_ref:
+        $ref: '#/components/schemas/labeled_item_ref'
+    labeled_item_ref:
       type: object
       required:
         - id
@@ -1892,7 +1888,7 @@ components:
       properties:
         id:
           type: string
-          description: id of the actor
+          description: identifier of the item
         label:
           $ref: '#/components/schemas/label'
     token_config:
