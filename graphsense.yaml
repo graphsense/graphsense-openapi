@@ -490,7 +490,7 @@ paths:
       summary: Returns address tags associated with a given label
       tags:
         - tags
-  /tags/actor/{actor}:
+  /tags/actors/{actor}:
     get:
       operationId: get_actor
       parameters:
@@ -505,7 +505,7 @@ paths:
       summary: Returns an actor given its unique id or (unique) label
       tags:
         - tags
-  /tags/actor/{actor}/tags:
+  /tags/actors/{actor}/tags:
     get:
       operationId: get_actor_tags
       parameters:
