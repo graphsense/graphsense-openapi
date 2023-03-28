@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - new endpoint /tags/actors/{actor_id}/tags - list of tags belonging to the actor
 
 
-## [23.01/1.2.0] - 2023-12-30
+## [23.01/1.2.0] - 2023-01-30
 ### Added
 - Token Support for Ethereum stable coin tokens (WETH, USDT, USDC)
 - new endpoints /{currency}/token_txs/{tx_hash} - get token txs per hash
