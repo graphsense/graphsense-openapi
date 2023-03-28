@@ -132,6 +132,9 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/direction_txs' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -292,6 +295,9 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction_txs' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -683,6 +689,30 @@ components:
         enum: [in, out]
       description: Incoming or outgoing transactions
       example: out
+    min_height:
+      in: query
+      name: min_height
+      required: false
+      schema:
+        $ref: '#/components/schemas/height'
+      description: Return transactions starting from given height
+      example: 1
+    max_height:
+      in: query
+      name: max_height
+      required: false
+      schema:
+        $ref: '#/components/schemas/height'
+      description: Return transactions up to (including) given height
+      example: 2
+    token_currency:
+      in: query
+      name: token_currency
+      required: false
+      schema:
+        type: string
+      description: Return transactions of given token currency
+      example: WETH
     io:
       in: path
       name: io
