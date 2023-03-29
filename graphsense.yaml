@@ -236,7 +236,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
-        - $ref: '#/components/parameters/omit_best_address_tag' 
+        - $ref: '#/components/parameters/exclude_best_address_tag' 
         - $ref: '#/components/parameters/include_actors' 
       responses:
         "200":
