@@ -236,6 +236,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/omit_best_address_tag' 
+        - $ref: '#/components/parameters/include_actors' 
       responses:
         "200":
           description: OK
@@ -276,6 +278,8 @@ paths:
         - $ref: '#/components/parameters/direction' 
         - $ref: '#/components/parameters/only_entity_ids' 
         - $ref: '#/components/parameters/include_labels' 
+        - $ref: '#/components/parameters/exclude_best_address_tag' 
+        - $ref: '#/components/parameters/include_actors' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -788,7 +792,23 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether to include labels of first page of tags 
+      description: Whether to include labels of first page of address tags 
+    exclude_best_address_tag:
+      in: query
+      name: exclude_best_address_tag
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to exclude the best address tag
+    include_actors:
+      in: query
+      name: include_actors
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to include the actors 
     include_io:
       in: query
       name: include_io
