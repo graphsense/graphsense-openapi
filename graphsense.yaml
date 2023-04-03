@@ -5,7 +5,7 @@ info:
   contact:
     name: Iknaio Cryptoasset Analytics GmbH
     email: contact@ikna.io
-  version: "1.2.0"
+  version: "1.3.0"
 servers:
   - url: 'https://api.ikna.io'
 paths:
@@ -132,6 +132,9 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/direction_txs' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -233,6 +236,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
+        - $ref: '#/components/parameters/exclude_best_address_tag' 
+        - $ref: '#/components/parameters/include_actors' 
       responses:
         "200":
           description: OK
@@ -273,6 +278,8 @@ paths:
         - $ref: '#/components/parameters/direction' 
         - $ref: '#/components/parameters/only_entity_ids' 
         - $ref: '#/components/parameters/include_labels' 
+        - $ref: '#/components/parameters/exclude_best_address_tag' 
+        - $ref: '#/components/parameters/include_actors' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -292,6 +299,9 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/direction_txs' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -490,6 +500,38 @@ paths:
       summary: Returns address tags associated with a given label
       tags:
         - tags
+  /tags/actors/{actor}:
+    get:
+      operationId: get_actor
+      parameters:
+        - $ref: '#/components/parameters/actor'  
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/actor'
+      summary: Returns an actor given its unique id or (unique) label
+      tags:
+        - tags
+  /tags/actors/{actor}/tags:
+    get:
+      operationId: get_actor_tags
+      parameters:
+        - $ref: '#/components/parameters/actor'  
+        - $ref: '#/components/parameters/page' 
+        - $ref: '#/components/parameters/pagesize' 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/address_tags'
+      summary: Returns the address tags for a given actor
+      tags:
+        - tags
   /tags/taxonomies:
     get:
       operationId: list_taxonomies
@@ -581,6 +623,15 @@ paths:
       x-streamed: true
 components:
   parameters:
+    actor:
+      in: path
+      name: actor
+      required: true
+      schema:
+        type: string
+        format: string
+      description: actor id
+      example: 'binance'
     currency:
       in: path
       name: currency
@@ -642,6 +693,30 @@ components:
         enum: [in, out]
       description: Incoming or outgoing transactions
       example: out
+    min_height:
+      in: query
+      name: min_height
+      required: false
+      schema:
+        $ref: '#/components/schemas/height'
+      description: Return transactions starting from given height
+      example: 1
+    max_height:
+      in: query
+      name: max_height
+      required: false
+      schema:
+        $ref: '#/components/schemas/height'
+      description: Return transactions up to (including) given height
+      example: 2
+    token_currency:
+      in: query
+      name: token_currency
+      required: false
+      schema:
+        type: string
+      description: Return transactions of given token currency
+      example: WETH
     io:
       in: path
       name: io
@@ -717,7 +792,23 @@ components:
       schema:
         type: boolean
         default: false
-      description: Whether to include labels of first page of tags 
+      description: Whether to include labels of first page of address tags 
+    exclude_best_address_tag:
+      in: query
+      name: exclude_best_address_tag
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to exclude the best address tag
+    include_actors:
+      in: query
+      name: include_actors
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Whether to include the actors 
     include_io:
       in: query
       name: include_io
@@ -1013,6 +1104,8 @@ components:
           $ref: '#/components/schemas/token_values'
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
+        actors: 
+          $ref: '#/components/schemas/labeled_item_refs'
         is_contract:
           type: boolean
         status:
@@ -1075,6 +1168,8 @@ components:
           $ref: '#/components/schemas/token_values'
         total_tokens_spent: 
           $ref: '#/components/schemas/token_values'
+        actors: 
+          $ref: '#/components/schemas/labeled_item_refs'
         best_address_tag:
           $ref: '#/components/schemas/address_tag'
         no_address_tags:
@@ -1119,6 +1214,10 @@ components:
           type: string
           description: Category
           example: exchange
+        actor:
+          type: string
+          description: id of the actor that controlls the address
+          example: binance
         abuse:
           type: string
           description: Abuses
@@ -1175,6 +1274,86 @@ components:
               $ref: '#/components/schemas/address_id'
             entity:
               $ref: '#/components/schemas/entity_id'
+    actors:
+      type: array
+      items:
+        $ref: '#/components/schemas/actor'
+    actor:
+      type: object
+      required:
+        - id
+        - label
+        - uri
+        - categories
+        - jurisdictions
+      properties:
+        id:
+          type: string
+          description: Id of the actor
+          example: binance
+        label:
+          $ref: '#/components/schemas/label'
+        uri:
+          $ref: '#/components/schemas/uri'
+        nr_tags:
+          type: integer
+          description: number of address tags of the actor
+          example: 100
+        categories:
+          type: array
+          description: A list actor categories
+          items:
+            $ref: '#/components/schemas/labeled_item_ref'
+        jurisdictions:
+          type: array
+          description: A list jurisdictions
+          items:
+            $ref: '#/components/schemas/labeled_item_ref'
+        context:
+          $ref: '#/components/schemas/actor_context'
+    actor_context:
+      type: object
+      required:
+        - uris
+        - images
+        - refs
+        - coingecko_ids
+        - defilama_ids
+      properties:
+        uris:
+          type: array
+          description: list of additonal uris identifying the actor
+          items:
+            $ref: '#/components/schemas/uri'
+        images:
+          type: array
+          description: list of uris to logos of the actor
+          items:
+            $ref: '#/components/schemas/uri'
+        refs:
+          type: array
+          description: list of uris to further information of the actors.
+          items:
+            $ref: '#/components/schemas/uri'
+        coingecko_ids:
+          type: array
+          description: list of references to coingecko exchanges or coins
+          items:
+            type: string
+        defilama_ids:
+          type: array
+          description: list of references to defilama
+          items:
+            type: string
+        twitter_handle:
+          type: string 
+          description: semi-colon separated list of twitter handles used by the actor
+        github_organisation:
+          type: string
+          description: semi-colon separated list of github organisations used by the actor
+        legal_name:
+          type: string
+          description: Name of the legal entity registerd by the actor.       
     token_values:
       type: object
       description: Per token value-flow
@@ -1720,6 +1899,8 @@ components:
             $ref: '#/components/schemas/search_result_by_currency'
         labels:
           $ref: '#/components/schemas/search_result_labels'
+        actors:
+          $ref: '#/components/schemas/labeled_item_refs'
     search_result_by_currency:
       type: object
       required:
@@ -1744,6 +1925,22 @@ components:
       description: The list of matching labels
       items:
         type: string
+    labeled_item_refs:
+      type: array
+      description: The list of matching actors
+      items:
+        $ref: '#/components/schemas/labeled_item_ref'
+    labeled_item_ref:
+      type: object
+      required:
+        - id
+        - label
+      properties:
+        id:
+          type: string
+          description: identifier of the item
+        label:
+          $ref: '#/components/schemas/label'
     token_config:
       type: object
       required:
