@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [23.06/1.3.0] - 2023-06-15
+
+No changes.
+
 ## [23.03/1.3.0] - 2023-03-28
 ### Added
 - Support for actors to collect tags under the umbrella of their real world controller
