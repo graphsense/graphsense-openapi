@@ -1045,7 +1045,9 @@ components:
         - io_index
         - tx_hash
       properties:
-        io_index:
+        input_index:
+          type: integer
+        output_index:
           type: integer
         tx_hash:
           type: string
