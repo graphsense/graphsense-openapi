@@ -1042,7 +1042,8 @@ components:
     tx_ref:
       type: object
       required:
-        - io_index
+        - input_index
+        - output_index
         - tx_hash
       properties:
         input_index:
@@ -2172,9 +2173,10 @@ components:
         from_address: addressA
         to_address: addressB
     tx_refs:
-      summary: references to inputs or outputs of another tranactions
+      summary: references to inputs or outputs of another tx
       value:
-        - io_index: 0
+        - output_index: 0
+          input_index: 0
           tx_hash: '120439699b10bac37c5316834644acfa8eae6f17b370231e79a2d71ce90f0ebf'
     txs_account:
       summary: list of account transactions
