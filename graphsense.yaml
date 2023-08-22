@@ -812,7 +812,7 @@ components:
       example: 04d92601677d62a985310b61a301e74870fa942c8be0648e16b1db23b996a8cd
     io_index:
       in: query
-      name: input_index
+      name: io_index
       required: false
       schema:
         type: integer
