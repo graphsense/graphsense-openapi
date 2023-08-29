@@ -970,7 +970,7 @@ components:
       required: true
       schema:
         type: string
-        minLength: 3
+        minLength: 2
       description: It can be (the beginning of) an address, a transaction or a label
       example: foo
     limit:
