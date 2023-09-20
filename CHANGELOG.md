@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [23.09/1.4.0] - 2023-09-20
+
+### Added
+- new endpoint /{currency}/txs/{hash}/spending - get the tx hashes and indexes of all tx outputs spent in this transaction
+- new endpoint /{currency}/txs/{hash}/spent_in - get the tx hashes and indexes of all transactions spending an output of the transaction
+
+### Changed
+- decreased the min length for a search input to 2
+
 ## [23.06/1.3.0] - 2023-06-15
 
 No changes.
