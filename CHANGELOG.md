@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [24.01.0] - 2024-01-11
+
+### Fixed
+- Default value for token_tx_id was wrong type (bool instead of int)
+
 ## [23.09/1.4.0] - 2023-09-20
 
 ### Added
