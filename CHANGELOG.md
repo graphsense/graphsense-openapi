@@ -3,7 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [24.01.0/1.4.1] - 2024-01-11
+## [24.01.1/1.4.2] - 2024-01-25
+
+### Fixed
+- Remove unneeded punctuation
+
+## [24.01.0/1.4.1] - 2024-01-25
 
 ### Fixed
 - Default value for token_tx_id was wrong type (bool instead of int)
