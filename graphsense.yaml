@@ -5,7 +5,7 @@ info:
   contact:
     name: Iknaio Cryptoasset Analytics GmbH
     email: contact@ikna.io
-  version: "1.4.1"
+  version: "1.4.2"
 servers:
   - url: 'https://api.ikna.io'
 paths:
@@ -401,7 +401,7 @@ paths:
                   $ref: '#/components/examples/tx_utxo'
                 tx_account:
                   $ref: '#/components/examples/tx_account'
-      summary: Returns details of a specific transaction identified by its hash.
+      summary: Returns details of a specific transaction identified by its hash
       tags:
         - txs
   /{currency}/token_txs/{tx_hash}:
@@ -440,7 +440,7 @@ paths:
                   $ref: '#/components/examples/txs_io'
               schema:
                 $ref: '#/components/schemas/tx_values'
-      summary: Returns input/output values of a specific transaction identified by its hash.
+      summary: Returns input/output values of a specific transaction identified by its hash
       tags:
         - txs
   /{currency}/txs/{tx_hash}/spent_in:
@@ -521,7 +521,7 @@ paths:
                   $ref: '#/components/examples/token_configs'
               schema:
                 $ref: '#/components/schemas/token_configs'
-      summary: Returns a list of supported token (sub)currencies.
+      summary: Returns a list of supported token (sub)currencies
       tags:
         - tokens
   /tags:
@@ -1396,7 +1396,7 @@ components:
             $ref: '#/components/schemas/uri'
         refs:
           type: array
-          description: list of uris to further information of the actors.
+          description: list of uris to further information of the actors
           items:
             $ref: '#/components/schemas/uri'
         coingecko_ids:
