@@ -134,6 +134,7 @@ paths:
         - $ref: '#/components/parameters/direction_txs' 
         - $ref: '#/components/parameters/min_height' 
         - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/sorting_order' 
         - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -301,6 +302,7 @@ paths:
         - $ref: '#/components/parameters/direction_txs' 
         - $ref: '#/components/parameters/min_height' 
         - $ref: '#/components/parameters/max_height' 
+        - $ref: '#/components/parameters/sorting_order' 
         - $ref: '#/components/parameters/token_currency' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
@@ -753,6 +755,15 @@ components:
         $ref: '#/components/schemas/height'
       description: Return transactions up to (including) given height
       example: 2
+    sorting_order:
+      in: query
+      name: order
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+      description: Sorting order
+      example: out
     token_currency:
       in: query
       name: token_currency
