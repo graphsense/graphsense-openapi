@@ -762,8 +762,9 @@ components:
       schema:
         type: string
         enum: [asc, desc]
+        default: desc
       description: Sorting order
-      example: out
+      example: desc
     token_currency:
       in: query
       name: token_currency
