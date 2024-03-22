@@ -216,6 +216,8 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/address' 
         - $ref: '#/components/parameters/neighbor' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:
@@ -326,6 +328,8 @@ paths:
         - $ref: '#/components/parameters/currency' 
         - $ref: '#/components/parameters/entity' 
         - $ref: '#/components/parameters/entity_neighbor' 
+        - $ref: '#/components/parameters/min_height' 
+        - $ref: '#/components/parameters/max_height' 
         - $ref: '#/components/parameters/page' 
         - $ref: '#/components/parameters/pagesize' 
       responses:

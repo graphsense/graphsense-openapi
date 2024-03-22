@@ -3,7 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [24.02.0] - 2024-02-29
+## [1.6.0-dev]
+
+- added paramters `min_height` and `max_height` to `list_address_links` and `list_entity_links` to limit retrieved txs.
+
+## [24.02.0/1.5.0] - 2024-02-29
 
 ### Added
 - added parameter `order` to `list_address_txs` and `list_entity_txs` to control sort order of returned list of transactions
