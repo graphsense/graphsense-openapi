@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.7.0] - 2024-04-05
+
+- This Repo is DEPRECATED: OpenAPI spec is now maintained in the graphsense-REST repository (see README.md)
+
 ## [24.04.0/1.6.0] - 2024-04-05
 
 - added parameters `min_height`, `max_height` and `order` to `list_address_links` and `list_entity_links` to limit retrieved txs.
