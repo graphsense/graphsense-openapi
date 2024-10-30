@@ -1,4 +1,6 @@
-# GraphSense OpenAPI specification
+# GraphSense OpenAPI specification (DEPRECATED)
+
+The OpenAPI Spec is now directly maintained in the [graphsense-REST](https://github.com/graphsense/graphsense-REST/blob/0e8e1aa1261f3580e98ed22e900ba4d6e299be4b/openapi_spec/graphsense.yaml) repository.
 
 This repository contains the OpenAPI specification for the
 [GraphSense](https://www.graphsense.info) API.
